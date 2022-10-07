@@ -1,0 +1,57 @@
+ifndef LIBRARIES_PATH
+$(error LIBRARIES_PATH is not set)
+endif
+
+CONFIG ?= debug
+VPATH += src
+
+ifeq ($(OS),Windows_NT)
+	CXX = cl.exe
+	CXX_LIB = lib.exe /OUT:"$(basename $@).lib"
+	make-dir = if not exist "$(1)" mkdir "$(1)"
+	del-file = del /q $(1)
+	make-path = $(subst /,\,$(subst %,\,$(strip $1)))
+
+	CXXMODULE = -c /ifcOutput"$(build_directory)" /Fo"$(basename $@).obj"
+	CXXEXECUTABLE = /Fe"$(basename $@).exe" /Fo"$(basename $@).obj"
+
+	CXXFLAGS += /nologo /EHa /std:c++latest /experimental:module
+
+	ifeq ($(CONFIG),debug)
+		CXXFLAGS += /Z7 /MDd
+		CXXEXECUTABLE += /Fd"$(basename $@).pdb"
+	else ifeq ($(CONFIG),release)
+		CXXFLAGS += /O2
+	endif
+
+	add-module-dir=/ifcSearchDir"$(if $1,$(call get-build-directory,$(1)),$(call get-build-directory))"
+	add-module-lib="$(call make-path,$(if $2,$(call get-build-directory,$2),$(call get-build-directory))/$(1).lib)"
+	add-module=/reference"$(call make-path,$(call get-build-directory,$(if $2,$2,))%$(1)).ifc"
+	add-build-module    =$(call add-build-target,$(1).obj $(1).ifc,$(2))
+	add-build-library   =$(call add-build-target,$(1).lib,$(addprefix $(build_directory)/,$(addsuffix .obj,$(2))))
+	make-library-module =$(MAKE) -C $2 $(build_directory)/$(1).ifc
+	make-library-lib    =$(MAKE) -C $2 $(build_directory)/$(1).lib
+endif
+
+get-src-directory   =$(call make-path,$(if $1,$1%,)$(src_directory))
+get-tests-directory =$(call make-path,$(if $1,$1%,)$(tests_directory))
+get-build-directory =$(call make-path,$(if $1,$1%,)$(build_directory))
+get-bin-directory   =$(call make-path,$(if $1,$1%,)$(bin_directory))
+get-library			=$(call make-path,$(LIBRARIES_PATH)%$(1))
+
+src_directory   =src
+tests_directory =tests
+build_directory =build/$(CONFIG)
+bin_directory   =bin/$(CONFIG)
+
+src-file   =$(call make-path,$(call get-src-directory)%$(1))
+test-file  =$(call make-path,$(call get-tests-directory)%$(1))
+build-file =$(call make-path,$(call get-build-directory)%$(1))
+
+add-build-target =$(addprefix $(build_directory)/,${1}): ${2} $(build_directory)
+add-bin-target   =$(addprefix $(bin_directory)/,${1}): ${2} $(bin_directory)
+
+define build-library
+	$(CXX_LIB) \
+		$(addprefix ",$(addsuffix ",$(filter %.obj,$^)))
+endef

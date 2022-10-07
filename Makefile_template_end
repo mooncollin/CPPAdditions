@@ -1,0 +1,9 @@
+$(build_directory):
+	$(call make-dir,$(call make-path,$(build_directory)))
+
+$(bin_directory):
+	$(call make-dir,$(call make-path,$(bin_directory)))
+
+clean:
+	$(call del-file,$(call make-path,$(build_directory)%*))
+	$(call del-file,$(call make-path,$(bin_directory)%*))
