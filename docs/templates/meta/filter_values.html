@@ -4,7 +4,7 @@
 {% set item_name = "filter_values" %}
 {% block nested %}../{% endblock %}
 {% block content2 %}
-{{macros.defined("cmoon.meta", github_url_src + "/meta/meta.ixx")}}
+{{macros.defined("cmoon.meta", github_url + "/meta/meta.ixx")}}
 {{macros.overload_set([
 "
 template<template<auto> class Predicate, auto... Values>

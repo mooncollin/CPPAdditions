@@ -2,7 +2,7 @@
 {% set breadcrumbs=[("Home", "/index.html")] %}
 {% block title %}Home{% endblock %}
 {% block content %}
-    <h1>Welcome to Collin Moon's C++ libraries documentation</h1>
+    <h1>Welcome to Collin Moon's C++ Libraries Documentation</h1>
     <hr>
     <p>
         This wiki will contain documentation about each library and its following public API.
@@ -20,11 +20,10 @@
     <h2 id="structure-code">Structure of the Code</h2>
     <hr>
     <p>
-        All source code is under the <a href="{{github_url_src}}">src/cmoon</a> folder.
         Each folder within is its own library. This project uses modules, and has taken an approach to <a href="#module-naming-convention">naming</a> of modules.
     </p>
     <p>
-        Inside each folder will contain a module file with the same name. This module file imports all files contained in the public API for that library.
+        Inside each source folder will contain a module file with the same name. This module file imports all files contained in the public API for that library.
         Users of the public library are encouraged to just import the entire module (example: <code>import cmoon.geometry</code> to import the geometry library).
         This is because not all module files within the library folder are part of the public API, and you are guaranteed to import everything correctly by
         importing the entire module.
@@ -35,7 +34,6 @@
     </p>
     <h3>Tests</h3>
     <p>
-        All tests are under the <a href="{{github_url_tests}}">tests</a> folder. Just like the structure of the source code, the test code will contain a folder for each module.
         Each folder contains a module file named the same thing as the module and is where all tests for that module get exported.
         A driver program is in each folder to run tests for that module. A driver program for the entire project is included, and will run all available tests.
     </p>
@@ -43,14 +41,14 @@
     <hr>
     <p>
         Every module is prefixed with <code>cmoon</code>, as to distinguish it from other projects.
-        The naming convention is similar to Java's packages/imports. For example, to import the <a href="{{github_url_src}}/json">json</a> library, you would type: <code>import cmoon.json</code>.
+        The naming convention is similar to Java's packages/imports.
     </p>
     <h2 id="libraries">Libraries</h2>
     <div class="p-4 bg-gray border rounded">
         <div class="row mb-4">
-            <div class="col-4">
+            <!-- <div class="col-4">
                 <a href="meta/index.html">Metaprogramming Library</a>
-            </div>
+            </div> -->
             <div class="col-4">
                 <a href="concepts/index.html">Concepts Library</a>
             </div>

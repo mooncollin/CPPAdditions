@@ -4,7 +4,7 @@
 {% set item_name = "detected" %}
 {% block nested %}../{% endblock %}
 {% block content2 %}
-{{macros.defined("cmoon.type_traits", github_url_src + "/type_traits/type_traits.ixx")}}
+{{macros.defined("cmoon.type_traits", github_url_src + "/type_traits/src/detector.ixx")}}
 {{macros.overload_set([
 "
 template<template<class...> class Op, class... Args>

@@ -4,7 +4,7 @@
 {% set item_name = "copy_pointer" %}
 {% block nested %}../{% endblock %}
 {% block content2 %}
-{{macros.defined("cmoon.type_traits", github_url_src + "/type_traits/type_traits.ixx")}}
+{{macros.defined("cmoon.type_traits", github_url_src + "/type_traits/src/copy_traits.ixx")}}
 {{macros.overload_set([
 "
 template<class From, class To>

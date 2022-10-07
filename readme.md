@@ -48,6 +48,6 @@ I have another [repository](https://github.com/mooncollin/C_plus_plus-Helpful-Li
 
 ## Docs
 
-Documentation is generate through a Python script located under the `docs` folder. I use Jinja to generate html files and use templates to help make the process easier. I find creating the docmentation separate from embedded in the code to be much easier to read the code and documentation. I try to mimic the look of [cppreference.com](https://en.cppreference.com/w/).
+Documentation is generate through a Python script located under the `docs` folder. I use Jinja to generate html files and use templates to help make the process easier. I find creating the docmentation separate from embedding comments into the code to be much easier to read the code and documentation. I try to mimic the look of [cppreference.com](https://en.cppreference.com/w/).
 
-Current documentation can be checked out [here](ADD LINK).
+Current documentation can be checked out [here](https://mooncollin.github.io/CPPAdditions/).

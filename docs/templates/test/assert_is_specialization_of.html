@@ -4,7 +4,7 @@
 {% set item_name = "assert_is_specialization_of" %}
 {% block nested %}../{% endblock %}
 {% block content2 %}
-{{macros.defined("cmoon.test", github_url_src + "/test/test.ixx")}}
+{{macros.defined("cmoon.test", github_url_src + "/test/src/assert.ixx")}}
 {{macros.overload_set([
 '
 template<class Type1, template<class...> class Type2>

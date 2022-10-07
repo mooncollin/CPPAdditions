@@ -4,7 +4,7 @@
 {% set item_name = "error" %}
 {% block nested %}../{% endblock %}
 {% block content2 %}
-{{macros.defined("cmoon.test", github_url_src + "/test/test.ixx")}}
+{{macros.defined("cmoon.test", github_url_src + "/test/src/assert.ixx")}}
 {{macros.overload_set([
 '
 void error(std::string_view message = "", const std::source_location& location = std::source_location::current());
