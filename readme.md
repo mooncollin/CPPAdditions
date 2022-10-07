@@ -41,3 +41,13 @@ The output of calling `make` inside of a library will generate the following ite
 Calling `make` will always build the library's static library, which in turn also generates all the module and object files.
 
 Calling `make tests` will always (if tests are available) build the `tests` executable and run it.
+
+## Other Libraries
+
+I have another [repository](https://github.com/mooncollin/C_plus_plus-Helpful-Libraries) that contains my original C++ libraries. This project attempts to convert those libraries into a standard format, and go fully C++20 modules. Eventually this repository will have everything from that other one, and I will deprecate it.
+
+## Docs
+
+Documentation is generate through a Python script located under the `docs` folder. I use Jinja to generate html files and use templates to help make the process easier. I find creating the docmentation separate from embedded in the code to be much easier to read the code and documentation. I try to mimic the look of [cppreference.com](https://en.cppreference.com/w/).
+
+Current documentation can be checked out [here](ADD LINK).
