@@ -15,7 +15,7 @@ ifeq ($(OS),Windows_NT)
 	CXXMODULE = -c /ifcOutput"$(build_directory)" /Fo"$(basename $@).obj"
 	CXXEXECUTABLE = /Fe"$(basename $@).exe" /Fo"$(basename $@).obj"
 
-	CXXFLAGS += /nologo /EHa /std:c++latest /experimental:module
+	CXXFLAGS += /nologo /EHa /std:c++latest /experimental:module /W4
 
 	ifeq ($(CONFIG),debug)
 		CXXFLAGS += /Z7 /MDd
@@ -27,6 +27,7 @@ ifeq ($(OS),Windows_NT)
 	add-module-dir=/ifcSearchDir"$(if $1,$(call get-build-directory,$(1)),$(call get-build-directory))"
 	add-module-lib="$(call make-path,$(if $2,$(call get-build-directory,$2),$(call get-build-directory))/$(1).lib)"
 	add-module=/reference"$(call make-path,$(call get-build-directory,$(if $2,$2,))%$(1)).ifc"
+	add-build-module    =$(call add-build-target,$(1).obj $(1).ifc,$(2))
 	add-build-module    =$(call add-build-target,$(1).obj $(1).ifc,$(2))
 	add-build-library   =$(call add-build-target,$(1).lib,$(addprefix $(build_directory)/,$(addsuffix .obj,$(2))))
 	make-library-module =$(MAKE) -C $2 $(build_directory)/$(1).ifc

@@ -12,6 +12,7 @@ $(call add-build-library,cmoon.utility,cmoon.utility.owner \
 									   cmoon.utility.stopwatch \
 									   cmoon.utility.as_unsigned \
 									   cmoon.utility.copyable_box \
+									   cmoon.utility.decay_copy \
 									   cmoon.utility)
 	$(call build-library)
 
@@ -24,6 +25,7 @@ $(call add-build-module,cmoon.utility,utility.ixx \
 									  $(build_directory)/cmoon.utility.extent_type.ifc \
 									  $(build_directory)/cmoon.utility.stopwatch.ifc \
 									  $(build_directory)/cmoon.utility.as_unsigned.ifc \
+									  $(build_directory)/cmoon.utility.decay_copy.ifc \
 									  $(build_directory)/cmoon.utility.copyable_box.ifc)
 	$(CXX) $(CXXFLAGS) $(CXXMODULE) \
 		$(call add-module-dir) \
@@ -52,6 +54,10 @@ $(call add-build-module,cmoon.utility.as_unsigned,as_unsigned.ixx)
 $(call add-build-module,cmoon.utility.copyable_box,copyable_box.ixx)
 	$(CXX) $(CXXFLAGS) $(CXXMODULE) \
 		$(call src-file,copyable_box.ixx)
+
+$(call add-build-module,cmoon.utility.decay_copy,decay_copy.ixx)
+	$(CXX) $(CXXFLAGS) $(CXXMODULE) \
+		$(call src-file,decay_copy.ixx)
 
 $(call add-build-module,cmoon.tests.utility,$(tests_directory)/utility.ixx \
 											$(build_directory)/cmoon.utility.ifc)
