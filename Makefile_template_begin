@@ -21,7 +21,7 @@ ifeq ($(OS),Windows_NT)
 		CXXFLAGS += /Z7 /MDd
 		CXXEXECUTABLE += /Fd"$(basename $@).pdb"
 	else ifeq ($(CONFIG),release)
-		CXXFLAGS += /O2
+		CXXFLAGS += /O2 /MD
 	endif
 
 	add-module-dir=/ifcSearchDir"$(if $1,$(call get-build-directory,$(1)),$(call get-build-directory))"

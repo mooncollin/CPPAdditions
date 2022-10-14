@@ -11,8 +11,8 @@ namespace cmoon::benchmarking
 	class benchmark_function : public benchmark
 	{
 		public:
-			benchmark_function(F&& f, std::size_t runs = 10, std::size_t iterations = 100)
-				: benchmark{typeid(f).name(), runs, iterations}, f_{std::forward<F>(f)} {}
+			benchmark_function(F f, std::size_t runs = 10, std::size_t iterations = 100)
+				: benchmark{typeid(f).name(), runs, iterations}, f_{std::move(f)} {}
 
 			void operator()() final
 			{

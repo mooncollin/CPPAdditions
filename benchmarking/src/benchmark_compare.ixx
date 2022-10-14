@@ -15,17 +15,33 @@ namespace cmoon::benchmarking
 		using noop_t = std::chrono::duration<double, std::nano>;
 
 		public:
+			using value_type = std::pair<std::string, const benchmark_result&>;
+
 			benchmark_compare() noexcept
 				: noop_average{std::max(std::chrono::duration_cast<noop_t>(run_benchmark(noop_benchmark{}).average_iteration_time()),
 										noop_t::min())} {}
 
-			void run(benchmark& bench)
+			void push_back(value_type p)
+			{
+				add_result(
+					std::move(p.first),
+					p.second
+				);
+			}
+
+			void add_result(std::string name,
+							const benchmark_result& result)
 			{
 				results_.emplace_back(
-					bench.name(),
-					run_benchmark(bench).average_iteration_time() /
-					noop_average
+					std::move(name),
+					result.average_iteration_time() / noop_average
 				);
+			}
+
+			void run(benchmark& bench)
+			{
+				add_result(bench.name(),
+						   run_benchmark(bench));
 			}
 
 			void run(benchmark&& bench)
@@ -70,16 +86,17 @@ namespace cmoon::benchmarking
 					os << "Results (CPU time / Noop time):\n\n";
 					for (const auto& [name, result] : comp.results_)
 					{
-						std::cout << std::format("{: <{}}: {:.4f}\n", name, right_padding_amount, result);
+						os << std::format(os.getloc(),
+										  "{: <{}}: {:.4f}\n", name, right_padding_amount, result);
 					}
 
-					std::cout << '\n';
+					os << '\n';
 
 					if (std::size(comp.results_) > 1)
 					{
 						for (auto it {std::ranges::cbegin(comp.results_)}; it != std::ranges::cend(comp.results_); ++it)
 						{
-							std::cout << it->first << ":\n";
+							os << it->first << ":\n";
 							for (auto it2 {std::ranges::cbegin(comp.results_)}; it2 != std::ranges::cend(comp.results_); ++it2)
 							{
 								if (it == it2)
@@ -90,22 +107,22 @@ namespace cmoon::benchmarking
 								const auto minmax {std::minmax(it->second, it2->second)};
 								if (minmax.second - minmax.first <= 5.0)
 								{
-									std::cout << "  Roughly the same as ";
+									os << "  Roughly the same as ";
 								}
 								else
 								{
 									const auto scale {minmax.second / minmax.first};
-									std::cout << std::format("  {:.2f}x", scale);
+									os << std::format("  {:.2f}x", scale);
 									if (it->second > it2->second)
 									{
-										std::cout << " slower than ";
+										os << " slower than ";
 									}
 									else
 									{
-										std::cout << " faster than ";
+										os << " faster than ";
 									}
 								}
-								std::cout << it2->first << "\n\n";
+								os << it2->first << "\n\n";
 							}
 						}
 					}

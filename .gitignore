@@ -1,4 +1,5 @@
 .vscode
 build.bat
+build-release.bat
 **/bin/*
 **/build/*
