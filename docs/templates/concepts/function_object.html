@@ -8,7 +8,7 @@
 {{macros.overload_set([
 "
 template<class F, class... Args>
-concept function_object = object<F> && std::invocable<F, Args...>;
+concept function_object = std::is_object_v<F> && std::invocable<F, Args...>;
 "
 ])}}
 <p>

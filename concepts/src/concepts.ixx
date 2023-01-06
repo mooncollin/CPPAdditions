@@ -7,42 +7,8 @@ import cmoon.type_traits;
 namespace cmoon
 {
 	export
-	template<class T>
-	concept object = std::is_object_v<T>;
-
-	export
-	template<class T>
-	concept array = std::is_array_v<T>;
-
-	export
-	template<class F, class Result>
-	concept supplier = !std::is_void_v<Result> &&
-						std::is_invocable_r_v<Result, F>;
-	
-	export
-	template<class F, class Result>
-	concept unary_operator = std::is_invocable_r_v<Result, F, Result>;
-
-	export
 	template<class F, class... Args>
-	concept consumer = std::invocable<F, Args...> &&
-					   std::is_void_v<std::invoke_result_t<F, Args...>>;
-	
-	export
-	template<class F, class... Args>
-	concept function_object = object<F> && std::invocable<F, Args...>;
-
-	export
-	template<class T>
-	concept arithmetic = std::is_arithmetic_v<T>;
-
-	export
-	template<class T>
-	concept signed_arithmetic = std::is_signed_v<T>;
-
-	export
-	template<class T>
-	concept unsigned_arithmetic = std::is_unsigned_v<T>;
+	concept function_object = std::is_object_v<F> && std::invocable<F, Args...>;
 
 	export
 	template<class T>
@@ -50,14 +16,6 @@ namespace cmoon
 		requires
 	{
 		sizeof(T);
-	};
-
-	export
-	template<class T>
-	concept has_size = 
-		requires(T t)
-	{
-		std::size(t);
 	};
 
 	export
@@ -108,84 +66,4 @@ namespace cmoon
 	export
 	template<class T>
 	concept class_type = decays_to<T, T> && std::is_class_v<T>;
-
-	export
-	template<class T, class T2>
-	concept plus_assignable =
-		requires(T& t, const T2& t2)
-	{
-		{ t += t2 } -> std::convertible_to<T>;
-	};
-
-	export
-	template<class T, class T2>
-	concept minus_assignable =
-		requires(T& t, const T2& t2)
-	{
-		{ t -= t2 } -> std::convertible_to<T>;
-	};
-
-	export
-	template<class T, class T2>
-	concept multiply_assignable =
-		requires(T& t, const T2& t2)
-	{
-		{ t *= t2 } -> std::convertible_to<T>;
-	};
-
-	export
-	template<class T, class T2>
-	concept divide_assignable =
-		requires(T& t, const T2& t2)
-	{
-		{ t /= t2 } -> std::convertible_to<T>;
-	};
-
-	export
-	template<class T, class T2>
-	concept modulus_assignable =
-		requires(T& t, const T2& t2)
-	{
-		{ t %= t2 } -> std::convertible_to<T>;
-	};
-
-	export
-	template<class T, class T2>
-	concept bit_or_assignable =
-		requires(T& t, const T2& t2)
-	{
-		{ t |= t2 } -> std::convertible_to<T>;
-	};
-
-	export
-	template<class T, class T2>
-	concept bit_and_assignable =
-		requires(T& t, const T2& t2)
-	{
-		{ t &= t2 } -> std::convertible_to<T>;
-	};
-
-	export
-	template<class T, class T2>
-	concept bit_xor_assignable =
-		requires(T& t, const T2& t2)
-	{
-		{ t ^= t2 } -> std::convertible_to<T>;
-	};
-
-	export
-	template<class T, class T2>
-	concept left_shift_assignable =
-		requires(T& t, const T2& t2)
-	{
-		{ t <<= t2 } -> std::convertible_to<T>;
-	};
-
-	export
-	template<class T, class T2>
-	concept right_shift_assignable =
-		requires(T& t, const T2& t2)
-	{
-		{ t >>= t2 } -> std::convertible_to<T>;
-	};
 }

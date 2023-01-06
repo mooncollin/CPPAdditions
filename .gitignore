@@ -3,3 +3,4 @@ build.bat
 build-release.bat
 **/bin/*
 **/build/*
+__pycache__

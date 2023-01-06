@@ -6,10 +6,7 @@
 {% block content2 %}
 {{macros.overload_set([
 "
-test_result() noexcept(noexcept(allocator_type()));
-",
-"
-test_result(const Allocator& alloc);
+test_result() noexcept;
 ",
 "
 test_result(const test_result& other);
@@ -22,13 +19,10 @@ test_result(test_result&& other) noexcept;
     1) Constructs an empty test result with no errors and no failures.
 </p>
 <p>
-    2) Constructs an empty test result with the given allocator.
+    2) Copy constructor.
 </p>
 <p>
-    3) Copy constructor.
-</p>
-<p>
-    4) Move constructor.
+    3) Move constructor.
 </p>
 {{macros.function_stats(
     [["other", "another test result object to copy/move"]],

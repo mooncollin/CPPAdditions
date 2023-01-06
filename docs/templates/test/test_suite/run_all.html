@@ -7,7 +7,7 @@
 {{macros.overload_set([
 "
 template<std::output_iterator<test_result> Out>
-void run_all(Out out);
+Out run_all(Out out);
 "
 ])}}
 <p>
@@ -16,7 +16,7 @@ void run_all(Out out);
 </p>
 {{macros.function_stats(
     [["out", "output iterator to receive <code>test_result</code>s"]],
-    None,
+    "The resulting output iterator",
     "",
     "Linear in number of test cases"
 )}}

@@ -19,7 +19,7 @@ $(call add-build-library,cmoon.utility,cmoon.utility.owner \
 $(call add-build-library,cmoon.tests.utility,cmoon.tests.utility)
 	$(call build-library)
 
-$(call add-build-module,cmoon.utility,utility.ixx \
+$(call add-build-module-impl,cmoon.utility,utility.ixx \
 									  $(build_directory)/cmoon.utility.owner.ifc \
 									  $(build_directory)/cmoon.utility.throw_on_error.ifc \
 									  $(build_directory)/cmoon.utility.extent_type.ifc \
@@ -27,42 +27,42 @@ $(call add-build-module,cmoon.utility,utility.ixx \
 									  $(build_directory)/cmoon.utility.as_unsigned.ifc \
 									  $(build_directory)/cmoon.utility.decay_copy.ifc \
 									  $(build_directory)/cmoon.utility.copyable_box.ifc)
-	$(CXX) $(CXXFLAGS) $(CXXMODULE) \
+	$(CXX) $(CXXFLAGS) $(CXXMODULE) $(CXXIMPL) \
 		$(call add-module-dir) \
 		$(call src-file,utility.ixx)
 
-$(call add-build-module,cmoon.utility.owner,owner.ixx)
-	$(CXX) $(CXXFLAGS) $(CXXMODULE) \
+$(call add-build-module-impl,cmoon.utility.owner,owner.ixx)
+	$(CXX) $(CXXFLAGS) $(CXXMODULE) $(CXXIMPL) \
 		$(call src-file,owner.ixx)
 
-$(call add-build-module,cmoon.utility.throw_on_error,throw_on_error.ixx)
-	$(CXX) $(CXXFLAGS) $(CXXMODULE) \
+$(call add-build-module-impl,cmoon.utility.throw_on_error,throw_on_error.ixx)
+	$(CXX) $(CXXFLAGS) $(CXXMODULE) $(CXXIMPL) \
 		$(call src-file,throw_on_error.ixx)
 
-$(call add-build-module,cmoon.utility.extent_type,extent_type.ixx)
-	$(CXX) $(CXXFLAGS) $(CXXMODULE) \
+$(call add-build-module-impl,cmoon.utility.extent_type,extent_type.ixx)
+	$(CXX) $(CXXFLAGS) $(CXXMODULE) $(CXXIMPL) \
 		$(call src-file,extent_type.ixx)
 
-$(call add-build-module,cmoon.utility.stopwatch,stopwatch.ixx)
-	$(CXX) $(CXXFLAGS) $(CXXMODULE) \
+$(call add-build-module-impl,cmoon.utility.stopwatch,stopwatch.ixx)
+	$(CXX) $(CXXFLAGS) $(CXXMODULE) $(CXXIMPL) \
 		$(call src-file,stopwatch.ixx)
 
-$(call add-build-module,cmoon.utility.as_unsigned,as_unsigned.ixx)
-	$(CXX) $(CXXFLAGS) $(CXXMODULE) \
+$(call add-build-module-impl,cmoon.utility.as_unsigned,as_unsigned.ixx)
+	$(CXX) $(CXXFLAGS) $(CXXMODULE) $(CXXIMPL) \
 		$(call src-file,as_unsigned.ixx)
 
-$(call add-build-module,cmoon.utility.copyable_box,copyable_box.ixx)
-	$(CXX) $(CXXFLAGS) $(CXXMODULE) \
+$(call add-build-module-impl,cmoon.utility.copyable_box,copyable_box.ixx)
+	$(CXX) $(CXXFLAGS) $(CXXMODULE) $(CXXIMPL) \
 		$(call src-file,copyable_box.ixx)
 
-$(call add-build-module,cmoon.utility.decay_copy,decay_copy.ixx)
-	$(CXX) $(CXXFLAGS) $(CXXMODULE) \
+$(call add-build-module-impl,cmoon.utility.decay_copy,decay_copy.ixx)
+	$(CXX) $(CXXFLAGS) $(CXXMODULE) $(CXXIMPL) \
 		$(call src-file,decay_copy.ixx)
 
-$(call add-build-module,cmoon.tests.utility,$(tests_directory)/utility.ixx \
+$(call add-build-module-impl,cmoon.tests.utility,$(tests_directory)/utility.ixx \
 											$(build_directory)/cmoon.utility.ifc)
 	$(call make-library-module,cmoon.test,$(cmoon_test_library))
-	$(CXX) $(CXXFLAGS) $(CXXMODULE) \
+	$(CXX) $(CXXFLAGS) $(CXXMODULE) $(CXXIMPL) \
 		$(call add-module-dir,$(cmoon_test_library)) \
 		$(call add-module-dir) \
 		$(call test-file,utility.ixx)

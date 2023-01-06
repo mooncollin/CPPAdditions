@@ -13,14 +13,16 @@ namespace cmoon::test
 	{
 		public:
 			using difference_type = std::iter_difference_t<It>;
-			using value_type = test_case*;
+			using value_type = test_case;
+			using pointer = value_type*;
+			using reference = value_type&;
 			using iterator_category = std::forward_iterator_tag;
 
 			test_suite_iterator() noexcept = default;
 
-			value_type operator*() const noexcept
+			reference operator*() const noexcept
 			{
-				return ptr->get();
+				return *(ptr->get());
 			}
 
 			test_suite_iterator& operator++()
@@ -80,11 +82,12 @@ namespace cmoon::test
 			}
 
 			template<std::output_iterator<test_result> Out>
-			void run_all(Out out)
+			Out run_all(Out out)
 			{
 				for (auto t_case : cases)
 				{
 					*out = t_case->run();
+					++out;
 				}
 			}
 

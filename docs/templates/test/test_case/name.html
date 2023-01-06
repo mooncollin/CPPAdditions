@@ -6,22 +6,16 @@
 {% block content2 %}
 {{macros.overload_set([
 "
-void name(std::string new_name) noexcept;
-",
-"
 [[nodiscard]] const std::string& name() const noexcept;
 "
 ])}}
 <p>
-    1) Change the name of this <code>test_case</code>.
-</p>
-<p>
-    2) Get the name of this <code>test_case</code>.
+    1) Get the name of this <code>test_case</code>.
 </p>
 {{macros.function_stats(
-    [["new_name", "A new name given to this <code>test_case</code>"]],
-    "",
-    "",
+    [],
+    "Its name as a <code><a href='https://en.cppreference.com/w/cpp/string/basic_string'>std::string</a></code>",
+    "This function never throws exceptions",
     ""
 )}}
 {% endblock %}

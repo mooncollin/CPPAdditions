@@ -14,17 +14,17 @@ $(call add-build-library,cmoon.concepts,cmoon.concepts)
 $(call add-build-library,cmoon.tests.concepts,cmoon.tests.concepts)
 	$(call build-library)
 
-$(call add-build-module,cmoon.concepts,concepts.ixx)
+$(call add-build-module-impl,cmoon.concepts,concepts.ixx)
 	$(call make-library-module,cmoon.type_traits,$(cmoon_type_traits_library))
-	$(CXX) $(CXXFLAGS) $(CXXMODULE) \
+	$(CXX) $(CXXFLAGS) $(CXXMODULE) $(CXXIMPL) \
 		$(call add-module-dir,$(cmoon_type_traits_library)) \
 		$(call src-file,concepts.ixx)
 
-$(call add-build-module,cmoon.tests.concepts,$(tests_directory)/concepts.ixx \
+$(call add-build-module-impl,cmoon.tests.concepts,$(tests_directory)/concepts.ixx \
 											 $(build_directory)/cmoon.concepts.ifc)
 	$(call make-library-module,cmoon.test,$(cmoon_test_library))
 	$(call make-library-module,cmoon.type_traits,$(cmoon_type_traits_library))
-	$(CXX) $(CXXFLAGS) $(CXXMODULE) \
+	$(CXX) $(CXXFLAGS) $(CXXMODULE) $(CXXIMPL) \
 		$(call add-module-dir,$(cmoon_test_library)) \
 		$(call add-module-dir,$(cmoon_type_traits_library)) \
 		$(call add-module-dir) \
@@ -33,6 +33,7 @@ $(call add-build-module,cmoon.tests.concepts,$(tests_directory)/concepts.ixx \
 $(call add-bin-target,tests.exe,$(tests_directory)/main.cpp \
 								$(build_directory)/cmoon.tests.concepts.lib \
 								$(build_directory)/cmoon.concepts.lib)
+	$(call make-library-module,cmoon.type_traits,$(cmoon_type_traits_library))
 	$(call make-library-lib,cmoon.test,$(cmoon_test_library))
 	$(call make-library-lib,cmoon.utility,$(cmoon_utility_library))
 	$(call make-library-lib,cmoon.ranges,$(cmoon_ranges_library))
@@ -45,9 +46,9 @@ $(call add-bin-target,tests.exe,$(tests_directory)/main.cpp \
 		$(call add-module-dir,$(cmoon_ranges_library)) \
 		$(call add-module-dir,$(cmoon_tuple_library)) \
 		$(call add-module-dir,$(cmoon_scope_library)) \
-		$(call add-module-lib,cmoon.test,$(cmoon_test_library)) \
 		$(call add-module-lib,cmoon.concepts) \
 		$(call add-module-lib,cmoon.tests.concepts) \
+		$(call add-module-lib,cmoon.test,$(cmoon_test_library)) \
 		$(call add-module-lib,cmoon.utility,$(cmoon_utility_library)) \
 		$(call add-module-lib,cmoon.ranges,$(cmoon_ranges_library)) \
 		$(call add-module-lib,cmoon.tuple,$(cmoon_tuple_library)) \

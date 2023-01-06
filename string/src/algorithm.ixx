@@ -2,8 +2,6 @@ export module cmoon.string.algorithm;
 
 import std.core;
 
-import cmoon.string.to_string;
-
 namespace cmoon
 {
     export

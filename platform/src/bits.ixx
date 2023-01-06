@@ -9,8 +9,6 @@ module;
 
 export module cmoon.platform.bits;
 
-import cmoon.concepts;
-
 namespace cmoon
 {
 	export
@@ -160,10 +158,12 @@ namespace cmoon
 									long double>>;
 
 	export
-	template<cmoon::arithmetic T>
+	template<class T>
+		requires(std::is_arithmetic_v<T>)
 	using least_int_type = least_value_int<static_cast<std::intmax_t>(std::numeric_limits<T>::max())>;
 
 	export
-	template<cmoon::arithmetic T>
+	template<class T>
+		requires(std::is_arithmetic_v<T>)
 	using least_float_type = least_value_float<static_cast<long double>(std::numeric_limits<T>::max())>;
 }

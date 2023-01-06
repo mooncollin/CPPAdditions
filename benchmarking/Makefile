@@ -20,7 +20,7 @@ $(call add-build-library,cmoon.benchmarking,cmoon.benchmarking.do_not_optimize \
 											cmoon.benchmarking)
 	$(call build-library)
 
-$(call add-build-module,cmoon.benchmarking,benchmarking.ixx \
+$(call add-build-module-impl,cmoon.benchmarking,benchmarking.ixx \
 										   $(build_directory)/cmoon.benchmarking.do_not_optimize.ifc \
 										   $(build_directory)/cmoon.benchmarking.run_result.ifc \
 										   $(build_directory)/cmoon.benchmarking.benchmark_result.ifc \
@@ -30,52 +30,52 @@ $(call add-build-module,cmoon.benchmarking,benchmarking.ixx \
 										   $(build_directory)/cmoon.benchmarking.benchmark_suite.ifc \
 										   $(build_directory)/cmoon.benchmarking.text_benchmark_runner.ifc \
 										   $(build_directory)/cmoon.benchmarking.benchmark_compare.ifc)
-	$(CXX) $(CXXFLAGS) $(CXXMODULE) \
+	$(CXX) $(CXXFLAGS) $(CXXMODULE) $(CXXIMPL) \
 		$(call add-module-dir) \
 		$(call src-file,benchmarking.ixx)
 
-$(call add-build-module,cmoon.benchmarking.do_not_optimize,do_not_optimize.ixx)
-	$(CXX) $(CXXFLAGS) $(CXXMODULE) \
+$(call add-build-module-impl,cmoon.benchmarking.do_not_optimize,do_not_optimize.ixx)
+	$(CXX) $(CXXFLAGS) $(CXXMODULE) $(CXXIMPL) \
 		$(call src-file,do_not_optimize.ixx)
 
-$(call add-build-module,cmoon.benchmarking.run_result,run_result.ixx)
-	$(CXX) $(CXXFLAGS) $(CXXMODULE) \
+$(call add-build-module-impl,cmoon.benchmarking.run_result,run_result.ixx)
+	$(CXX) $(CXXFLAGS) $(CXXMODULE) $(CXXIMPL) \
 		$(call src-file,run_result.ixx)
 
-$(call add-build-module,cmoon.benchmarking.benchmark_result,benchmark_result.ixx)
-	$(CXX) $(CXXFLAGS) $(CXXMODULE) \
+$(call add-build-module-impl,cmoon.benchmarking.benchmark_result,benchmark_result.ixx)
+	$(CXX) $(CXXFLAGS) $(CXXMODULE) $(CXXIMPL) \
 		$(call add-module-dir) \
 		$(call src-file,benchmark_result.ixx)
 
-$(call add-build-module,cmoon.benchmarking.benchmark,benchmark.ixx)
+$(call add-build-module-impl,cmoon.benchmarking.benchmark,benchmark.ixx)
 	$(call make-library-module,cmoon.utility,$(cmoon_utility_library))
-	$(CXX) $(CXXFLAGS) $(CXXMODULE) \
+	$(CXX) $(CXXFLAGS) $(CXXMODULE) $(CXXIMPL) \
 		$(call add-module-dir) \
 		$(call add-module-dir,$(cmoon_utility_library)) \
 		$(call src-file,benchmark.ixx)
 
-$(call add-build-module,cmoon.benchmarking.benchmark_function,benchmark_function.ixx)
-	$(CXX) $(CXXFLAGS) $(CXXMODULE) \
+$(call add-build-module-impl,cmoon.benchmarking.benchmark_function,benchmark_function.ixx)
+	$(CXX) $(CXXFLAGS) $(CXXMODULE) $(CXXIMPL) \
 		$(call add-module-dir) \
 		$(call src-file,benchmark_function.ixx)
 
-$(call add-build-module,cmoon.benchmarking.noop_benchmark,noop_benchmark.ixx)
-	$(CXX) $(CXXFLAGS) $(CXXMODULE) \
+$(call add-build-module-impl,cmoon.benchmarking.noop_benchmark,noop_benchmark.ixx)
+	$(CXX) $(CXXFLAGS) $(CXXMODULE) $(CXXIMPL) \
 		$(call add-module-dir) \
 		$(call src-file,noop_benchmark.ixx)
 
-$(call add-build-module,cmoon.benchmarking.benchmark_suite,benchmark_suite.ixx)
-	$(CXX) $(CXXFLAGS) $(CXXMODULE) \
+$(call add-build-module-impl,cmoon.benchmarking.benchmark_suite,benchmark_suite.ixx)
+	$(CXX) $(CXXFLAGS) $(CXXMODULE) $(CXXIMPL) \
 		$(call add-module-dir) \
 		$(call src-file,benchmark_suite.ixx)
 
-$(call add-build-module,cmoon.benchmarking.text_benchmark_runner,text_benchmark_runner.ixx)
-	$(CXX) $(CXXFLAGS) $(CXXMODULE) \
+$(call add-build-module-impl,cmoon.benchmarking.text_benchmark_runner,text_benchmark_runner.ixx)
+	$(CXX) $(CXXFLAGS) $(CXXMODULE) $(CXXIMPL) \
 		$(call add-module-dir) \
 		$(call src-file,text_benchmark_runner.ixx)
 
-$(call add-build-module,cmoon.benchmarking.benchmark_compare,benchmark_compare.ixx)
-	$(CXX) $(CXXFLAGS) $(CXXMODULE) \
+$(call add-build-module-impl,cmoon.benchmarking.benchmark_compare,benchmark_compare.ixx)
+	$(CXX) $(CXXFLAGS) $(CXXMODULE) $(CXXIMPL) \
 		$(call add-module-dir) \
 		$(call src-file,benchmark_compare.ixx)
 
@@ -88,7 +88,7 @@ $(call add-build-library,cmoon.tests.benchmarking,cmoon.tests.benchmarking.run_r
 												  cmoon.tests.benchmarking)
 	$(call build-library)
 
-$(call add-build-module,cmoon.tests.benchmarking,$(tests_directory)/benchmarking.ixx \
+$(call add-build-module-impl,cmoon.tests.benchmarking,$(tests_directory)/benchmarking.ixx \
 											 	 $(build_directory)/cmoon.benchmarking.ifc \
 												 $(build_directory)/cmoon.tests.benchmarking.run_result.ifc \
 												 $(build_directory)/cmoon.tests.benchmarking.benchmark_result.ifc \
@@ -96,52 +96,52 @@ $(call add-build-module,cmoon.tests.benchmarking,$(tests_directory)/benchmarking
 												 $(build_directory)/cmoon.tests.benchmarking.noop_benchmark.ifc)
 	$(call make-library-module,cmoon.test,$(cmoon_test_library))
 	$(call make-library-module,cmoon.type_traits,$(cmoon_type_traits_library))
-	$(CXX) $(CXXFLAGS) $(CXXMODULE) \
+	$(CXX) $(CXXFLAGS) $(CXXMODULE) $(CXXIMPL) \
 		$(call add-module-dir) \
 		$(call add-module-dir,$(cmoon_test_library)) \
 		$(call add-module-dir,$(cmoon_type_traits_library)) \
 		$(call test-file,benchmarking.ixx)
 
-$(call add-build-module,cmoon.tests.benchmarking.benchmark_function,$(tests_directory)/benchmark_function.ixx \
+$(call add-build-module-impl,cmoon.tests.benchmarking.benchmark_function,$(tests_directory)/benchmark_function.ixx \
 											 						$(build_directory)/cmoon.benchmarking.ifc)
 	$(call make-library-module,cmoon.test,$(cmoon_test_library))
 	$(call make-library-module,cmoon.type_traits,$(cmoon_type_traits_library))
 	$(call make-library-lib,cmoon.concepts,$(cmoon_concepts_library))
-	$(CXX) $(CXXFLAGS) $(CXXMODULE) \
+	$(CXX) $(CXXFLAGS) $(CXXMODULE) $(CXXIMPL) \
 		$(call add-module-dir) \
 		$(call add-module-dir,$(cmoon_test_library)) \
 		$(call add-module-dir,$(cmoon_type_traits_library)) \
 		$(call add-module-dir,$(cmoon_concepts_library)) \
 		$(call test-file,benchmark_function.ixx)
 
-$(call add-build-module,cmoon.tests.benchmarking.benchmark_result,$(tests_directory)/benchmark_result.ixx \
+$(call add-build-module-impl,cmoon.tests.benchmarking.benchmark_result,$(tests_directory)/benchmark_result.ixx \
 											 					  $(build_directory)/cmoon.benchmarking.ifc)
 	$(call make-library-module,cmoon.test,$(cmoon_test_library))
 	$(call make-library-module,cmoon.type_traits,$(cmoon_type_traits_library))
 	$(call make-library-lib,cmoon.concepts,$(cmoon_concepts_library))
-	$(CXX) $(CXXFLAGS) $(CXXMODULE) \
+	$(CXX) $(CXXFLAGS) $(CXXMODULE) $(CXXIMPL) \
 		$(call add-module-dir) \
 		$(call add-module-dir,$(cmoon_test_library)) \
 		$(call add-module-dir,$(cmoon_type_traits_library)) \
 		$(call add-module-dir,$(cmoon_concepts_library)) \
 		$(call test-file,benchmark_result.ixx)
 
-$(call add-build-module,cmoon.tests.benchmarking.noop_benchmark,$(tests_directory)/noop_benchmark.ixx \
+$(call add-build-module-impl,cmoon.tests.benchmarking.noop_benchmark,$(tests_directory)/noop_benchmark.ixx \
 											 					$(build_directory)/cmoon.benchmarking.ifc)
 	$(call make-library-module,cmoon.test,$(cmoon_test_library))
 	$(call make-library-module,cmoon.type_traits,$(cmoon_type_traits_library))
-	$(CXX) $(CXXFLAGS) $(CXXMODULE) \
+	$(CXX) $(CXXFLAGS) $(CXXMODULE) $(CXXIMPL) \
 		$(call add-module-dir) \
 		$(call add-module-dir,$(cmoon_test_library)) \
 		$(call add-module-dir,$(cmoon_type_traits_library)) \
 		$(call test-file,noop_benchmark.ixx)
 
-$(call add-build-module,cmoon.tests.benchmarking.run_result,$(tests_directory)/run_result.ixx \
+$(call add-build-module-impl,cmoon.tests.benchmarking.run_result,$(tests_directory)/run_result.ixx \
 											 				$(build_directory)/cmoon.benchmarking.ifc)
 	$(call make-library-module,cmoon.test,$(cmoon_test_library))
 	$(call make-library-module,cmoon.type_traits,$(cmoon_type_traits_library))
 	$(call make-library-lib,cmoon.concepts,$(cmoon_concepts_library))
-	$(CXX) $(CXXFLAGS) $(CXXMODULE) \
+	$(CXX) $(CXXFLAGS) $(CXXMODULE) $(CXXIMPL) \
 		$(call add-module-dir) \
 		$(call add-module-dir,$(cmoon_test_library)) \
 		$(call add-module-dir,$(cmoon_type_traits_library)) \

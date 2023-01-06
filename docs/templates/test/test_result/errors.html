@@ -6,7 +6,7 @@
 {% block content2 %}
 {{macros.overload_set([
 "
-const std::vector<std::exception, allocator_type>& errors() const noexcept;
+[[nodiscard]] auto errors() const noexcept;
 "
 ])}}
 <p>
@@ -14,7 +14,7 @@ const std::vector<std::exception, allocator_type>& errors() const noexcept;
 </p>
 {{macros.function_stats(
     [],
-    "A <code><a href='https://en.cppreference.com/w/cpp/container/vector'>std::vector</a></code> of the errors of this <code>test_result</code>",
+    "A <code><a href='https://en.cppreference.com/w/cpp/ranges/all_view'>view</a></code> of the <code><a href='https://en.cppreference.com/w/cpp/error/exception'>std::exception</a></code> errors of this <code>test_result</code>",
     "This function never throws exceptions",
     ""
 )}}

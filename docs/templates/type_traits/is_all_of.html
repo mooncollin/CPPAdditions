@@ -8,7 +8,7 @@
 {{macros.overload_set([
 "
 template<typename T, typename... Ts>
-struct is_any_of : public std::conjunction<std::is_same<T, Ts>...> {};
+struct is_all_of : public std::conjunction<std::is_same<T, Ts>...> {};
 "
 ])}}
 <p>

@@ -223,7 +223,8 @@ namespace cmoon::test
 	}
 
 	export
-	template<cmoon::arithmetic T, cmoon::arithmetic F>
+	template<class T, class F>
+		requires(std::is_arithmetic_v<T> && std::is_arithmetic_v<F>)
 	void assert_almost_equal(const T& actual, const F& expected, const std::common_type_t<T, F>& delta, std::string_view message = "", const std::source_location& location = std::source_location::current())
 	{
 		const auto difference {std::abs(actual - expected)};
@@ -241,7 +242,8 @@ namespace cmoon::test
 	}
 
 	export
-	template<cmoon::arithmetic T, cmoon::arithmetic F>
+	template<class T, class F>
+		requires(std::is_arithmetic_v<T> && std::is_arithmetic_v<F>)
 	void assert_not_almost_equal(const T& actual, const F& expected, const std::common_type_t<T, F>& delta, std::string_view message = "", const std::source_location& location = std::source_location::current())
 	{
 		const auto difference = std::abs(actual - expected);

@@ -23,13 +23,13 @@ using detected_or = /* see below */;
     <ol class="paren_list">
         <li class="mb-2">
             An <code><a href="https://en.cppreference.com/w/cpp/types/integral_constant">std::integral_constant</a></code> whose member constant <code>value</code> is <code>true</code>
-            if <code>Op&lt;Args...&gt;</code> is valid, else its member constant <code>value</code> is <code>false</code>.
+            if <code>Op&lt;Args...&gt;</code> is a type, else its member constant <code>value</code> is <code>false</code>.
         </li>
         <li class="mb-2">
-            The type that is a result of <code>Op&lt;Args...&gt;</code> if <code>Op&lt;Args...&gt;</code> is valid. If it is not valid, then the type is <a href="nonesuch.html">cmoon::nonesuch</a>.
+            The type that is a result of <code>Op&lt;Args...&gt;</code> if <code>Op&lt;Args...&gt;</code> is a type. If it is not a type, then the type is <a href="nonesuch.html">cmoon::nonesuch</a>.
         </li>
         <li>
-            The type that is a result of <code>Op&lt;Args...&gt;</code> if <code>Op&lt;Args...&gt;</code> is valid. If it is not valid, then the type is <code>Default</code>.
+            The type that is a result of <code>Op&lt;Args...&gt;</code> if <code>Op&lt;Args...&gt;</code> is a type. If it is not a type, then the type is <code>Default</code>.
         </li>
     </ol>
 </p>

@@ -41,18 +41,10 @@ namespace cmoon
 
 	export
 	inline constexpr bool debugging {
-	compiler == compiler_type::msvc ? (
-	#if defined(_DEBUG)
-		true
-	#else
-		false
-	#endif
-									):(
-	#if defined NDEBUG
+	#ifdef NDEBUG
 	false
 	#else
 	true
 	#endif
-	)
 	};
 }

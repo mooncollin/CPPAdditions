@@ -13,20 +13,19 @@ import cmoon.test.test_result;
 namespace cmoon::test
 {
 	export
-	template<class CharT, class Traits>
 	class text_test_runner
 	{
 		public:
-			text_test_runner(std::basic_ostream<CharT, Traits>& out) noexcept
+			text_test_runner(std::ostream& out) noexcept
 				: output_{out} {}
 
 			test_result run(test_case& t_case)
 			{
 				if (!t_case.name().empty())
 				{
-					output_ << "\nRunning test case: ";
-					output_ << t_case.name();
-					output_ << '\n';
+					output_.get() << "\nRunning test case: ";
+					output_.get() << t_case.name();
+					output_.get() << '\n';
 				}
 				print_header();
 				stopwatch.reset();
@@ -34,23 +33,23 @@ namespace cmoon::test
 				const auto duration {stopwatch.get_elapsed_time()};
 				print_test_result(result);
 
-				output_ << "=======================================\n";
+				output_.get() << "=======================================\n";
 				print_footer(duration);
 
 				if (result.passed())
 				{
-					output_ << "\nOK! 1 passed.\n\n";
+					output_.get() << "\nOK! 1 passed.\n\n";
 				}
 				else
 				{
-					output_ << "\nFAILED! 1 ";
+					output_.get() << "\nFAILED! 1 ";
 					if (!result.errors().empty())
 					{
-						output_ << "error.\n\n";
+						output_.get() << "error.\n\n";
 					}
 					else
 					{
-						output_ << "failure.\n\n";
+						output_.get() << "failure.\n\n";
 					}
 				}
 
@@ -66,119 +65,119 @@ namespace cmoon::test
 
 				if (!t_suite.name().empty())
 				{
-					output_ << "Running test suite: ";
-					output_ << t_suite.name();
-					output_ << '\n';
+					output_.get() << "Running test suite: ";
+					output_.get() << t_suite.name();
+					output_.get() << '\n';
 				}
 				print_header();
 				stopwatch.reset();
-				for (auto t_case : t_suite)
+				for (auto& t_case : t_suite)
 				{
-					results.push_back(t_case->run());
+					results.push_back(t_case.run());
 					if (!results.back().errors().empty())
 					{
-						num_errored++;
-						output_ << 'E';
+						++num_errored;
+						output_.get() << 'E';
 					}
 					else if (!results.back().failures().empty())
 					{
-						num_failed++;
-						output_ << 'F';
+						++num_failed;
+						output_.get() << 'F';
 					}
 					else
 					{
-						num_passed++;
-						output_ << '.';
+						++num_passed;
+						output_.get() << '.';
 					}
 				}
 				const auto duration {stopwatch.get_elapsed_time()};
 
-				output_ << "\n\n=======================================\n";
+				output_.get() << "\n\n=======================================\n";
 
 				for (const auto& [result, test_case] : cmoon::ranges::views::zip(results, t_suite))
 				{
 					if (!result.passed())
 					{
-						output_ << '\n';
-						output_ << test_case->name();
-						output_ << '\n';
+						output_.get() << '\n';
+						output_.get() << test_case.name();
+						output_.get() << '\n';
 						print_test_result(result);
 					}
 				}
 
-				output_ << "=======================================\n";
+				output_.get() << "=======================================\n";
 				print_footer(duration);
 
-				if (num_passed == std::size(results))
+				if (num_passed == results.size())
 				{
-					output_ << "\nOK!";
+					output_.get() << "\nOK!";
 				}
 				else
 				{
-					output_ << "\nFAILED!";
+					output_.get() << "\nFAILED!";
 				}
 
 				if (num_passed != 0)
 				{
-					output_ << ' ';
-					output_ << num_passed;
-					output_ << " passed";
+					output_.get() << ' ';
+					output_.get() << num_passed;
+					output_.get() << " passed";
 				}
 				if (num_errored != 0)
 				{
-					output_ << ' ';
-					output_ << num_errored;
-					output_ << " errored";
+					output_.get() << ' ';
+					output_.get() << num_errored;
+					output_.get() << " errored";
 				}
 				if (num_failed != 0)
 				{
-					output_ << ' ';
-					output_ << num_failed;
-					output_ << " failed";
+					output_.get() << ' ';
+					output_.get() << num_failed;
+					output_.get() << " failed";
 				}
-				output_ << '\n';
+				output_.get() << '\n';
 
 				return results;
 			}
 		private:
 			void print_header()
 			{
-				output_ << "Starting testing at ";
-				output_ << std::format(output_.getloc(), "{:%F %T}",
+				output_.get() << "Starting testing at ";
+				output_.get() << std::format(output_.get().getloc(), "{:%F %T}",
 									   std::chrono::zoned_time{std::chrono::current_zone(), std::chrono::system_clock::now()});
-				output_ << "\n\n";
+				output_.get() << "\n\n";
 			}
 
 			template<class Duration>
 			void print_footer(const Duration& duration)
 			{
-				output_ << "Ending testing at ";
-				output_ << std::format(output_.getloc(), "{:%F %T}",
+				output_.get() << "Ending testing at ";
+				output_.get() << std::format(output_.get().getloc(), "{:%F %T}",
 									   std::chrono::zoned_time{std::chrono::current_zone(), std::chrono::system_clock::now()});
-				output_ << " : ";
+				output_.get() << " : ";
 
-				cmoon::scope_exit reset_fmt {[this, before_fmt = output_.flags()] {
-					output_.setf(before_fmt);
+				cmoon::scope_exit reset_fmt {[this, before_fmt = output_.get().flags()] {
+					output_.get().setf(before_fmt);
 				}};
 				
-				output_.setf(std::ios::fixed);
+				output_.get().setf(std::ios::fixed);
 
 				if (const std::chrono::duration<double> seconds {duration};
 					seconds.count() > 1)
 				{
-					output_.precision(3);
-					output_ << seconds;
+					output_.get().precision(3);
+					output_.get() << seconds;
 				}
 				else if (const std::chrono::duration<double, std::milli> milliseconds {duration};
 						 milliseconds.count() > 1)
 				{
-					output_.precision(3);
-					output_ << milliseconds;
+					output_.get().precision(3);
+					output_.get() << milliseconds;
 				}
 				else
 				{
 					const std::chrono::nanoseconds nanoseconds {duration};
-					output_ << nanoseconds;
+					output_.get() << nanoseconds;
 				}
 			}
 
@@ -186,28 +185,28 @@ namespace cmoon::test
 			{
 				if (!result.errors().empty())
 				{
-					output_ << "Errors:\n";
+					output_.get() << "Errors:\n";
 
 					for (const auto& error : result.errors())
 					{
-						output_ << error.what()
-								<< '\n';
+						output_.get() << error.what()
+									  << '\n';
 					}
 				}
 
 				if (!result.failures().empty())
 				{
-					output_ << "Failures:\n";
+					output_.get() << "Failures:\n";
 
 					for (const auto& failure : result.failures())
 					{
-						output_ << failure.what()
-								<< '\n';
+						output_.get() << failure.what()
+									  << '\n';
 					}
 				}
 			}
 
-			std::basic_ostream<CharT, Traits>& output_;
+			std::reference_wrapper<std::ostream> output_;
 			cmoon::stopwatch stopwatch;
 	};
 }
