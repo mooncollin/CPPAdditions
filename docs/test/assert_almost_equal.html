@@ -52,7 +52,8 @@
                 <td class="p-0"><small><pre class="mb-0">
 <code class="language-cpp rounded py-0 pe-0 bg-transparent">
 
-template&lt;cmoon::arithmetic T, cmoon::arithmetic F&gt;
+template&lt;class T, class F&gt;
+    requires(std::is_arithmetic_v&lt;T&gt; &amp;&amp; std::is_arithmetic_v&lt;F&gt;)
 void assert_almost_equal(const T&amp; first, const F&amp; second, const std::common_type_t&lt;T, F&gt;&amp; delta, std::string_view message = &#34;&#34;, const std::source_location&amp; location = std::source_location::current());
 
 </code>
