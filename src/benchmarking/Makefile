@@ -1,14 +1,6 @@
 include $(TEMPLATE_BEGIN)
 .DEFAULT_GOAL :=$(call build-target,cmoon.benchmarking.lib)
 
-cmoon_concepts_library 	  	=$(call get-library,concepts)
-cmoon_test_library        	=$(call get-library,test)
-cmoon_utility_library     	=$(call get-library,utility)
-cmoon_type_traits_library 	=$(call get-library,type_traits)
-cmoon_ranges_library 		=$(call get-library,ranges)
-cmoon_tuple_library 		=$(call get-library,tuple)
-cmoon_scope_library 		=$(call get-library,scope)
-
 $(eval $(call import-library,concepts))
 $(eval $(call import-library,test))
 $(eval $(call import-library,utility))
