@@ -1,6 +1,7 @@
 include $(TEMPLATE_BEGIN)
+.DEFAULT_GOAL :=$(call build-target,cmoon.scope.lib)
 
-cmoon_concepts_library =$(call get-library,concepts)
+$(eval $(call import-library,concepts))
 
 $(call add-build-library,cmoon.scope,cmoon.scope.scope_exit \
 									 cmoon.scope.scope_fail \
@@ -19,26 +20,26 @@ $(call add-build-module-impl,cmoon.scope,scope.ixx \
 		$(call add-module-dir,$(cmoon_concepts_library)) \
 		$(call src-file,scope.ixx)
 
-$(call add-build-module-impl,cmoon.scope.scope_exit,scope_exit.ixx)
-	$(call make-library-module,cmoon.concepts,$(cmoon_concepts_library))
+$(call add-build-module-impl,cmoon.scope.scope_exit,scope_exit.ixx, \
+														cmoon.concepts)
 	$(CXX) $(CXXFLAGS) $(CXXMODULE) $(CXXIMPL) \
 		$(call add-module-dir,$(cmoon_concepts_library)) \
 		$(call src-file,scope_exit.ixx)
 
-$(call add-build-module-impl,cmoon.scope.scope_fail,scope_fail.ixx)
-	$(call make-library-module,cmoon.concepts,$(cmoon_concepts_library))
+$(call add-build-module-impl,cmoon.scope.scope_fail,scope_fail.ixx, \
+														cmoon.concepts)
 	$(CXX) $(CXXFLAGS) $(CXXMODULE) $(CXXIMPL) \
 		$(call add-module-dir,$(cmoon_concepts_library)) \
 		$(call src-file,scope_fail.ixx)
 
-$(call add-build-module-impl,cmoon.scope.scope_success,scope_success.ixx)
-	$(call make-library-module,cmoon.concepts,$(cmoon_concepts_library))
+$(call add-build-module-impl,cmoon.scope.scope_success,scope_success.ixx, \
+													   	cmoon.concepts)
 	$(CXX) $(CXXFLAGS) $(CXXMODULE) $(CXXIMPL) \
 		$(call add-module-dir,$(cmoon_concepts_library)) \
 		$(call src-file,scope_success.ixx)
 
-$(call add-build-module-impl,cmoon.scope.unique_resource,unique_resource.ixx)
-	$(call make-library-module,cmoon.concepts,$(cmoon_concepts_library))
+$(call add-build-module-impl,cmoon.scope.unique_resource,unique_resource.ixx, \
+														 	cmoon.concepts)
 	$(CXX) $(CXXFLAGS) $(CXXMODULE) $(CXXIMPL) \
 		$(call add-module-dir,$(cmoon_concepts_library)) \
 		$(call src-file,unique_resource.ixx)

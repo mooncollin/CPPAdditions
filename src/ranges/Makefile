@@ -1,8 +1,9 @@
 include $(TEMPLATE_BEGIN)
+.DEFAULT_GOAL :=$(call build-target,cmoon.ranges.lib)
 
-cmoon_tuple_library 	=$(call get-library,tuple)
-cmoon_utility_library 	=$(call get-library,utility)
-cmoon_concepts_library 	=$(call get-library,concepts)
+$(eval $(call import-library,tuple))
+$(eval $(call import-library,utility))
+$(eval $(call import-library,concepts))
 
 $(call add-build-library,cmoon.ranges,cmoon.ranges.zip \
 									  cmoon.ranges.enumerate \
@@ -22,10 +23,10 @@ $(call add-build-module-impl,cmoon.ranges,ranges.ixx \
 		$(call add-module-dir) \
 		$(call src-file,ranges.ixx)
 
-$(call add-build-module-impl,cmoon.ranges.zip,zip.ixx)
-	$(call make-library-module,cmoon.tuple,$(cmoon_tuple_library))
-	$(call make-library-module,cmoon.utility,$(cmoon_utility_library))
-	$(call make-library-module,cmoon.concepts,$(cmoon_concepts_library))
+$(call add-build-module-impl,cmoon.ranges.zip,zip.ixx, \
+											  	cmoon.tuple \
+												cmoon.utility \
+												cmoon.concepts)
 	$(CXX) $(CXXFLAGS) $(CXXMODULE) $(CXXIMPL) \
 		$(call add-module-dir,$(cmoon_tuple_library)) \
 		$(call add-module-dir,$(cmoon_utility_library)) \

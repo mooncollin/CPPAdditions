@@ -1,10 +1,11 @@
 include $(TEMPLATE_BEGIN)
+.DEFAULT_GOAL :=$(call build-target,cmoon.utility.lib)
 
-cmoon_concepts_library 		=$(call get-library,concepts)
-cmoon_test_library 			=$(call get-library,test)
-cmoon_ranges_library 		=$(call get-library,ranges)
-cmoon_tuple_library 		=$(call get-library,tuple)
-cmoon_scope_library 		=$(call get-library,scope)
+$(eval $(call import-library,concepts))
+$(eval $(call import-library,test))
+$(eval $(call import-library,ranges))
+$(eval $(call import-library,tuple))
+$(eval $(call import-library,scope))
 
 $(call add-build-library,cmoon.utility,cmoon.utility.owner \
 									   cmoon.utility.throw_on_error \
@@ -60,21 +61,21 @@ $(call add-build-module-impl,cmoon.utility.decay_copy,decay_copy.ixx)
 		$(call src-file,decay_copy.ixx)
 
 $(call add-build-module-impl,cmoon.tests.utility,$(tests_directory)/utility.ixx \
-											$(build_directory)/cmoon.utility.ifc)
-	$(call make-library-module,cmoon.test,$(cmoon_test_library))
+												 $(build_directory)/cmoon.utility.ifc, \
+												 	cmoon.test)
 	$(CXX) $(CXXFLAGS) $(CXXMODULE) $(CXXIMPL) \
-		$(call add-module-dir,$(cmoon_test_library)) \
 		$(call add-module-dir) \
+		$(call add-module-dir,$(cmoon_test_library)) \
 		$(call test-file,utility.ixx)
 
 $(call add-bin-target,tests.exe,$(tests_directory)/main.cpp \
 								$(build_directory)/cmoon.tests.utility.lib \
-								$(build_directory)/cmoon.utility.lib)
-	$(call make-library-lib,cmoon.concepts,$(cmoon_concepts_library))
-	$(call make-library-lib,cmoon.test,$(cmoon_test_library))
-	$(call make-library-lib,cmoon.ranges,$(cmoon_ranges_library))
-	$(call make-library-lib,cmoon.tuple,$(cmoon_tuple_library))
-	$(call make-library-lib,cmoon.scope,$(cmoon_scope_library))
+								$(build_directory)/cmoon.utility.lib, \
+									cmoon.concepts \
+									cmoon.test \
+									cmoon.ranges \
+									cmoon.tuple \
+									cmoon.scope)
 	$(CXX) $(CXXFLAGS) $(CXXEXECUTABLE) \
 		$(call add-module-dir) \
 		$(call add-module-dir,$(cmoon_test_library)) \

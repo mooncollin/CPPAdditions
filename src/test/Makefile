@@ -1,11 +1,12 @@
 include $(TEMPLATE_BEGIN)
+.DEFAULT_GOAL :=$(call build-target,cmoon.test.lib)
 
-cmoon_concepts_library 		=$(call get-library,concepts)
-cmoon_utility_library 		=$(call get-library,utility)
-cmoon_scope_library 		=$(call get-library,scope)
-cmoon_ranges_library 		=$(call get-library,ranges)
-cmoon_type_traits_library 	=$(call get-library,type_traits)
-cmoon_tuple_library 		=$(call get-library,tuple)
+$(eval $(call import-library,concepts))
+$(eval $(call import-library,utility))
+$(eval $(call import-library,scope))
+$(eval $(call import-library,ranges))
+$(eval $(call import-library,type_traits))
+$(eval $(call import-library,tuple))
 
 $(call add-build-library,cmoon.test,cmoon.test.assert_exception \
 									cmoon.test.assert \
@@ -17,12 +18,12 @@ $(call add-build-library,cmoon.test,cmoon.test.assert_exception \
 	$(call build-library)
 
 $(call add-build-module-impl,cmoon.test,test.ixx \
-								   $(build_directory)/cmoon.test.assert_exception.ifc \
-								   $(build_directory)/cmoon.test.assert.ifc \
-								   $(build_directory)/cmoon.test.test_result.ifc \
-								   $(build_directory)/cmoon.test.test_case.ifc \
-								   $(build_directory)/cmoon.test.test_suite.ifc \
-								   $(build_directory)/cmoon.test.text_test_runner.ifc)
+							 			$(build_directory)/cmoon.test.assert_exception.ifc \
+							 			$(build_directory)/cmoon.test.assert.ifc \
+							 			$(build_directory)/cmoon.test.test_result.ifc \
+							 			$(build_directory)/cmoon.test.test_case.ifc \
+							 			$(build_directory)/cmoon.test.test_suite.ifc \
+							 			$(build_directory)/cmoon.test.text_test_runner.ifc)
 	$(CXX) $(CXXFLAGS) $(CXXMODULE) $(CXXIMPL) \
 		$(call add-module-dir) \
 		$(call src-file,test.ixx)
@@ -32,9 +33,8 @@ $(call add-build-module-impl,cmoon.test.assert_exception,assert_exception.ixx)
 		$(call src-file,assert_exception.ixx)
 
 $(call add-build-module-impl,cmoon.test.assert,assert.ixx \
-										  $(build_directory)/cmoon.test.assert_exception.ifc)
-	$(call make-library-module,cmoon.concepts,$(cmoon_concepts_library))
-	$(call make-library-module,cmoon.type_traits,$(cmoon_type_traits_library))
+							 				   $(build_directory)/cmoon.test.assert_exception.ifc, \
+							 				   	cmoon.concepts)
 	$(CXX) $(CXXFLAGS) $(CXXMODULE) $(CXXIMPL) \
 		$(call add-module-dir) \
 		$(call add-module-dir,$(cmoon_concepts_library)) \
@@ -42,7 +42,7 @@ $(call add-build-module-impl,cmoon.test.assert,assert.ixx \
 		$(call src-file,assert.ixx)
 
 $(call add-build-module-impl,cmoon.test.test_result,test_result.ixx \
-											   $(build_directory)/cmoon.test.assert_exception.ifc)
+											   		$(build_directory)/cmoon.test.assert_exception.ifc)
 	$(CXX) $(CXXFLAGS) $(CXXMODULE) $(CXXIMPL) \
 		$(call add-module-dir) \
 		$(call src-file,test_result.ixx)
@@ -61,14 +61,12 @@ $(call add-build-module-impl,cmoon.test.test_suite,test_suite.ixx \
 		$(call src-file,test_suite.ixx)
 
 $(call add-build-module-impl,cmoon.test.text_test_runner,text_test_runner.ixx \
-											  		$(build_directory)/cmoon.test.test_case.ifc \
-											  		$(build_directory)/cmoon.test.test_suite.ifc \
-											  		$(build_directory)/cmoon.test.test_result.ifc)
-	$(call make-library-module,cmoon.concepts,$(cmoon_concepts_library))
-	$(call make-library-module,cmoon.utility,$(cmoon_utility_library))
-	$(call make-library-module,cmoon.scope,$(cmoon_scope_library))
-	$(call make-library-module,cmoon.ranges,$(cmoon_ranges_library))
-	$(call make-library-module,cmoon.tuple,$(cmoon_tuple_library))
+											  			 $(build_directory)/cmoon.test.test_case.ifc \
+											  			 $(build_directory)/cmoon.test.test_suite.ifc \
+											  			 $(build_directory)/cmoon.test.test_result.ifc, \
+														 	cmoon.utility \
+														 	cmoon.scope \
+														 	cmoon.ranges)
 	$(CXX) $(CXXFLAGS) $(CXXMODULE) $(CXXIMPL) \
 		$(call add-module-dir) \
 		$(call add-module-dir,$(cmoon_concepts_library)) \

@@ -6,3 +6,4 @@ export import cmoon.type_traits.is_string_literal;
 export import cmoon.type_traits.is_character;
 export import cmoon.type_traits.detector;
 export import cmoon.type_traits.is_specialization;
+export import cmoon.type_traits.function_traits;

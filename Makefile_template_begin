@@ -10,8 +10,10 @@ ifeq ($(OS),Windows_NT)
 	CXX_LIB =lib.exe /OUT:"$(basename $@).lib"
 	make-dir =if not exist "$(1)" mkdir "$(1)"
 	del-file =del /q $(1)
+	copy-file=copy $(1) $(2)
 	make-path =$(subst /,\,$(subst %,\,$(strip $1)))
 	object_file_extension =obj
+	module_file_extension =ifc
 
 	CXXMODULE		=-c /ifcOutput"$(build_directory)"
 	CXXMODULEONLY	=/ifcOnly
@@ -29,14 +31,17 @@ ifeq ($(OS),Windows_NT)
 
 	add-module-dir=/ifcSearchDir"$(if $1,$(call get-build-directory,$(1)),$(call get-build-directory))"
 	add-module-lib="$(call make-path,$(if $2,$(call get-build-directory,$2),$(call get-build-directory))/$(1).lib)"
-	add-module=/reference"$(call make-path,$(call get-build-directory,$(if $2,$2,))%$(1)).ifc"
-	add-build-module     	=$(call add-build-target,$(1).ifc,$(2))
-	add-build-impl			=$(call add-build-target,$(1).$(object_file_extension),$(2))
-	add-build-module-impl 	=$(call add-build-target,$(1).$(object_file_extension) $(1).ifc,$(2))
-	add-build-library   	=$(call add-build-target,$(1).lib,$(addprefix $(build_directory)/,$(addsuffix .$(object_file_extension),$(2))))
-	make-library-module 	=$(MAKE) -C $2 $(build_directory)/$(1).ifc
-	make-library-lib    	=$(MAKE) -C $2 $(build_directory)/$(1).lib
+	add-module=/reference"$(call make-path,$(call get-build-directory,$(if $2,$2,))%$(1)).$(module_file_extension)"
+	add-build-module     	=$(call add-build-target,$(1).$(module_file_extension),$(2),$(3))
+	add-build-impl			=$(call add-build-target,$(1).$(object_file_extension),$(2),$(addsuffix .$(module_file_extension),$(3)))
+	add-build-module-impl 	=$(call add-build-target,$(1).$(object_file_extension) $(1).$(module_file_extension),$(2),$(addsuffix .$(module_file_extension),$(3)))
+	add-build-library   	=$(call add-build-target,$(1).lib,$(addprefix $(build_directory)/,$(addsuffix .$(object_file_extension),$(2))),$(addsuffix .lib, $(3)))
 endif
+
+src_directory   =src
+tests_directory =tests
+build_directory =build/$(CONFIG)
+bin_directory   =bin/$(CONFIG)
 
 get-src-directory   =$(call make-path,$(if $1,$1%,)$(src_directory))
 get-tests-directory =$(call make-path,$(if $1,$1%,)$(tests_directory))
@@ -44,19 +49,31 @@ get-build-directory =$(call make-path,$(if $1,$1%,)$(build_directory))
 get-bin-directory   =$(call make-path,$(if $1,$1%,)$(bin_directory))
 get-library			=$(call make-path,$(LIBRARIES_PATH)%$(1))
 
-src_directory   =src
-tests_directory =tests
-build_directory =build/$(CONFIG)
-bin_directory   =bin/$(CONFIG)
+src-file   	 =$(call make-path,$(call get-src-directory)%$(1))
+test-file  	 =$(call make-path,$(call get-tests-directory)%$(1))
+build-file 	 =$(call make-path,$(call get-build-directory)%$(1))
+build-target =$(build_directory)/$(1)
+bin-target	 =$(bin_directory)/$(1)
+tests-target =$(tests_directory)/$(1)
 
-src-file   =$(call make-path,$(call get-src-directory)%$(1))
-test-file  =$(call make-path,$(call get-tests-directory)%$(1))
-build-file =$(call make-path,$(call get-build-directory)%$(1))
-
-add-build-target =$(addprefix $(build_directory)/,${1}): ${2} $(build_directory)
-add-bin-target   =$(addprefix $(bin_directory)/,${1}): ${2} $(bin_directory)
+add-build-target =$(addprefix $(build_directory)/,$(1)): $(2) | $(build_directory) $(3)
+add-bin-target   =$(addprefix $(bin_directory)/,$(1)): $(2) | $(bin_directory) $(addsuffix .lib,$(3))
 
 define build-library
 	$(CXX_LIB) \
 		$(addprefix ",$(addsuffix ",$(filter %.$(object_file_extension),$^)))
+endef
+
+define import-library
+cmoon_$(1)_library = $(call get-library,$(1))
+
+$(LIBRARIES_PATH)/$(1)/$(build_directory)/cmoon.$(1).$(module_file_extension):
+	@$(MAKE) -C $(LIBRARIES_PATH)/$(1) $(build_directory)/cmoon.$(1).$(module_file_extension)
+
+$(LIBRARIES_PATH)/$(1)/$(build_directory)/cmoon.$(1).lib:
+	@$(MAKE) -C $(LIBRARIES_PATH)/$(1) $(build_directory)/cmoon.$(1).lib
+
+cmoon.$(1).$(module_file_extension): $(LIBRARIES_PATH)/$(1)/$(build_directory)/cmoon.$(1).$(module_file_extension)
+
+cmoon.$(1).lib: $(LIBRARIES_PATH)/$(1)/$(build_directory)/cmoon.$(1).lib
 endef

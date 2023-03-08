@@ -7,6 +7,7 @@ $(call add-build-library,cmoon.type_traits,cmoon.type_traits.copy_traits \
 										   cmoon.type_traits.is_character \
 										   cmoon.type_traits.detector \
 										   cmoon.type_traits.is_specialization \
+										   cmoon.type_traits.function_traits \
 										   cmoon.type_traits)
 	$(call build-library)
 
@@ -17,7 +18,8 @@ $(call add-build-module-impl,cmoon.type_traits,type_traits.ixx \
 										  $(build_directory)/cmoon.type_traits.is_string_literal.ifc \
 										  $(build_directory)/cmoon.type_traits.is_character.ifc \
 										  $(build_directory)/cmoon.type_traits.detector.ifc \
-										  $(build_directory)/cmoon.type_traits.is_specialization.ifc)
+										  $(build_directory)/cmoon.type_traits.is_specialization.ifc \
+										  $(build_directory)/cmoon.type_traits.function_traits.ifc)
 	$(CXX) $(CXXFLAGS) $(CXXMODULE) $(CXXIMPL) \
 		$(call add-module-dir) \
 		$(call src-file,type_traits.ixx)
@@ -51,5 +53,9 @@ $(call add-build-module-impl,cmoon.type_traits.detector,detector.ixx)
 $(call add-build-module-impl,cmoon.type_traits.is_specialization,is_specialization.ixx)
 	$(CXX) $(CXXFLAGS) $(CXXMODULE) $(CXXIMPL) \
 		$(call src-file,is_specialization.ixx)
+
+$(call add-build-module-impl,cmoon.type_traits.function_traits,function_traits.ixx)
+	$(CXX) $(CXXFLAGS) $(CXXMODULE) $(CXXIMPL) \
+		$(call src-file,function_traits.ixx)
 
 include $(TEMPLATE_END)
