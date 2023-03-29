@@ -5,9 +5,38 @@ import std.core;
 namespace cmoon::ranges
 {
 	template<class T, class R>
-	concept compatible_range = std::ranges::input_range<R> &&
-							   std::constructible_from<T, std::ranges::range_reference_t<R>> &&
-							   !std::convertible_to<std::ranges::range_reference_t<R>, T>;
+	concept container_compatible_range = std::ranges::input_range<R> &&
+							   			 std::convertible_to<std::ranges::range_reference_t<R>, T>;
+
+	template<class Container>
+	concept reservable_container = std::ranges::sized_range<Container> &&
+		requires(Container& c, std::ranges::range_size_t<Container> n)
+	{
+		c.reserve(n);
+		{ c.capacity() } -> std::same_as<decltype(n)>;
+		{ c.max_size() } -> std::same_as<decltype(n)>;
+	};
+
+	template<class Container, class Reference>
+	concept container_insertable =
+		requires(Container& c, Reference&& ref)
+	{
+		c.push_back(std::forward<Reference>(ref));
+		c.insert(c.end(), std::forward<Reference>(ref));
+	};
+
+	template<class Reference, class C>
+	constexpr auto container_inserter(C& c)
+	{
+		if constexpr (requires { c.push_back(std::declval<Reference>()); })
+		{
+			return std::back_inserter(c);
+		}
+		else
+		{
+			return std::inserter(c, c.end());
+		}
+	}
 
 	export
 	struct from_range_t
@@ -18,19 +47,14 @@ namespace cmoon::ranges
 	export
 	inline constexpr from_range_t from_range {};
 
-	template<class C>
-	concept can_insert = std::ranges::range<C> &&
-		requires(C c)
+	struct program_is_ill_formed
 	{
-		std::inserter(c, std::ranges::end(c));
-	};
-
-	template<class C, class R>
-	concept reservable_container = std::ranges::sized_range<R> &&
-		requires(C& c, R&& r)
-	{
-		{ c.capacity() } -> std::same_as<std::ranges::range_size_t<R>>;
-		c.reserve(c.capacity());
+		program_is_ill_formed() = delete;
+		~program_is_ill_formed() = delete;
+		program_is_ill_formed(const program_is_ill_formed&) = delete;
+		program_is_ill_formed(program_is_ill_formed&&) = delete;
+		program_is_ill_formed& operator=(const program_is_ill_formed&) = delete;
+		program_is_ill_formed& operator=(program_is_ill_formed&&) = delete;
 	};
 
 	export
@@ -38,77 +62,106 @@ namespace cmoon::ranges
 		requires(!std::ranges::view<C>)
 	constexpr C to(R&& r, Args&&... args)
 	{
-		if constexpr (std::constructible_from<C, R, Args...>)
+		if constexpr (!std::ranges::input_range<C> || std::convertible_to<std::ranges::range_reference_t<R>,
+																		  std::convertible_to<std::ranges::range_reference_t<R>, std::ranges::range_value_t<C>>>)
 		{
-			return C(std::forward<R>(r), std::forward<Args>(args)...);
-		}
-		else if constexpr (std::constructible_from<C, from_range_t, R, Args...>)
-		{
-			return C(from_range, std::forward<R>(r), std::forward<Args>(args)...);
-		}
-		else if constexpr (std::constructible_from<C, Args...> &&
-						   std::indirectly_copyable<std::ranges::iterator_t<R>, std::ranges::iterator_t<C>> &&
-						   can_insert<C>)
-		{
-			C c(std::forward<Args>(args)...);
-			if constexpr (reservable_container<C, R>)
+			if constexpr (std::constructible_from<C, R, Args...>)
 			{
-				c.reserve(std::ranges::size(r));
+				return C(std::forward<R>(r), std::forward<Args>(args)...);
 			}
-
-			std::ranges::copy(r, std::inserter(c, std::ranges::end(c)));
-			return c;
-		}
-		else if constexpr (std::ranges::input_range<std::ranges::range_value_t<C>> &&
-						   std::ranges::input_range<std::ranges::range_value_t<R>> &&
-						   !std::ranges::view<std::ranges::range_value_t<C>> &&
-						   std::indirectly_copyable<std::ranges::iterator_t<std::ranges::range_reference_t<R>>,
-						   std::ranges::iterator_t<std::ranges::range_value_t<C>>> &&
-						   can_insert<C>)
-		{
-			C c(std::forward<Args>(args)...);
-			if constexpr (reservable_container<C, R>)
+			else if constexpr (std::constructible_from<C, from_range_t, R, Args...>)
 			{
-				c.reserve(std::ranges::size(r));
+				return C(from_range, std::forward<R>(r), std::forward<Args>(args)...);
 			}
-
-			auto v = r | std::ranges::views::transform([](auto&& elem) {
-				return to<range_value_t<C>>(elem);
-			});
-
-			std::ranges::copy(v, std::inserter(c, std::ranges::end(c)));
-			return c;
+			else if constexpr (std::ranges::common_range<R> &&
+							   requires { typename std::iterator_traits<std::ranges::iterator_t<R>>::iterator_category; } &&
+							   std::derived_from<typename std::iterator_traits<std::ranges::iterator_t<R>>::iterator_category> &&
+							   std::constructible_from<C, std::ranges::iterator_t<R>, std::ranges::sentinel_t<R>, Args...>)
+			{
+				return C(std::ranges::begin(r), std::ranges::end(r), std::forward<Args>(args)...);
+			}
+			else if constexpr (std::constructible_from<C, Args...> &&
+							   container_insertable<C, std::ranges::range_reference_t<R>>)
+			{
+				C c(std::forward<Args>(args)...);
+				if constexpr (std::ranges::sized_range<R> && reservable_container<C>)
+				{
+					c.reserve(static_cast<std::ranges::range_size_t<C>>(std::ranges::size(r)));
+				}
+				std::ranges::copy(r, container_inserter<std::ranges::range_reference_t<R>>(c));
+			}
+			else if constexpr (std::ranges::input_range<std::ranges::range_reference_t<C>>)
+			{
+				return to<C>(r | std::views::transform([](auto&& elem) {
+					return to<std::ranges::range_value_t<C>>(std::forward<decltype(elem)>(elem));
+				}), std::forward<Args>(args)...);
+			}
+			else
+			{
+				return program_is_ill_formed{};
+			}
+		}
+		else if constexpr (std::ranges::input_range<std::ranges::range_reference_t<C>>)
+		{
+			return to<C>(r | std::views::transform([](auto&& elem) {
+				return to<std::ranges::range_value_t<C>>(std::forward<decltype(elem)>(elem));
+			}), std::forward<Args>(args)...);
+		}
+		else
+		{
+			return program_is_ill_formed{};
 		}
 	}
-
-	template<template<class...> class C, std::ranges::input_range R, class... Args>
-	struct deduce_type;
-
-	template<template<class...> class C, std::ranges::input_range R, class... Args>
-		requires(requires(C c, R r, Args... args) {
-			C(r, args...);
-		})
-	struct deduce_type<C, R, Args...> : std::type_identity_t<decltype(C(std::declval<R>(), std::declval<Args>()...))> {};
-
-	template<template<class...> class C, std::ranges::input_range R, class... Args>
-		requires(requires(C c, R r, Args... args) {
-			C(from_range, r, args...);
-		})
-	struct deduce_type<C, R, Args...> : std::type_identity_t<decltype(C(from_range, std::declval<R>(), std::declval<Args>()...))> {};
-
-	template<template<class...> class C, std::ranges::input_range R, class... Args>
-		requires(requires(C c, std::ranges::iterator_t<R> iter, Args... args) {
-			C(iter, iter, args...);
-		})
-	struct deduce_type<C, R, Args...> : std::type_identity_t<decltype(C(std::declval<std::ranges::iterator_t<R>>(), std::declval<std::ranges::iterator_t<R>>(), std::declval<Args>()...))> {};
-
-	template<template<class...> class C, std::ranges::input_range R, class... Args>
-	using deduce_type_t = typename deduce_type<C, R, Args...>::type;
 
 	export
 	template<template<class...> class C, std::ranges::input_range R, class... Args>
-	constexpr deduce_type_t<C, R, Args...> to(R&& r, Args&&... args)
+	constexpr auto to(R&& r, Args&&... args)
 	{
-		return to<deduce_type_t<C, R, Args...>>(std::forward<R>(R), std::forward<Args>(args)...);
+		if constexpr (requires{ C(std::declval<R>(), std::declval<Args>()...); })
+		{
+			return to<decltype(C(std::declval<R>(), std::declval<Args>()...))>(std::forward<R>(r), std::forward<Args>(args)...);
+		}
+		else
+		{
+			struct input_iterator_helper
+			{
+				using iterator_catgory = std::input_iterator_tag;
+				using value_type = std::ranges::range_value_t<R>;
+				using difference_type = std::ptrdiff_t;
+				using pointer = std::add_pointer_t<std::ranges::range_reference_t<R>>;
+				using reference = std::ranges::range_reference_t<R>;
+
+				reference operator*() const;
+				pointer operator->() const;
+				input_iterator_helper& operator++();
+				input_iterator_helper& operator++(int);
+				bool operator==(const input_iterator_helper&) const;
+			};
+
+			if constexpr (requires { C(std::declval<input_iterator_helper>(), std::declval<input_iterator_helper>(), std::declval<Args>()...); })
+			{
+				return to<decltype(C(std::declval<input_iterator_helper>(), std::declval<input_iterator_helper>(), std::declval<Args>()...))>(std::forward<R>(r), std::forward<Args>(args)...);
+			}
+			else
+			{
+				return program_is_ill_formed{};
+			}
+		}
 	}
+
+	// TODO: when I get std::range_adapter_closure
+	// export
+	// template<class C, class... Args>
+	// 	requires(!std::ranges::view<C>)
+	// constexpr auto to(Args&&... args)
+	// {
+
+	// }
+
+	// export
+	// template<template<class...> class C, class... Args>
+	// constexpr auto to(Args&&... args)
+	// {
+		
+	// }
 }
