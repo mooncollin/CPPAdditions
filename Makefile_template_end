@@ -1,3 +1,22 @@
+ifeq ($(level),)
+generic_level=src/
+level_indirection=../../
+clean_build_target =*
+else
+generic_level=../
+level_indirection=
+clean_build_target =cmoon.$(current_dir).*
+endif
+
+$(build_directory)/cmoon.%.$(module_file_extension):
+	@$(MAKE) -C $(generic_level)$* $(level_indirection)$(build_directory)/cmoon.$*.$(module_file_extension)
+
+$(build_directory)/cmoon.%.lib:
+	@$(MAKE) -C $(generic_level)$* $(level_indirection)$(build_directory)/cmoon.$*.lib
+
+$(build_directory)/cmoon..tests.%.lib:
+	@$(MAKE) -C $(generic_level)$* $(level_indirection)$(build_directory)/cmoon.tests.$*.lib
+
 $(build_directory):
 	@$(call make-dir,$(call make-path,$(build_directory)))
 
@@ -5,5 +24,5 @@ $(bin_directory):
 	@$(call make-dir,$(call make-path,$(bin_directory)))
 
 clean: | $(build_directory) $(bin_directory)
-	$(call del-file,$(call make-path,$(build_directory)%*))
+	$(call del-file,$(call make-path,$(build_directory)%$(clean_build_target)))
 	$(call del-file,$(call make-path,$(bin_directory)%*))

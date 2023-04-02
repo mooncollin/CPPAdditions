@@ -14,7 +14,7 @@ namespace cmoon
                            public underlying_valarray<T, S>
     {
         public:
-            using value_type = underlying_valarray<T, S>::value_type;
+            using value_type = T;
             using underlying = underlying_valarray<T, S>::underlying;
 
             template<class T2>
@@ -22,12 +22,10 @@ namespace cmoon
 
             constexpr fixed_valarray() = default;
 
-            constexpr fixed_valarray(underlying data_)
-                : underlying_valarray<T, S>{std::move(underlying)} {}
 
             template<std::convertible_to<value_type>... T2>
             constexpr fixed_valarray(T2&&... t2)
-                : underlying_valarray<T, S>{{static_cast<value_type>(t2)...}} {}
+                : underlying_valarray<T, S>{static_cast<value_type>(t2)...} {}
 
             template<class E>
                 requires(cmoon::is_specialization_v<E, basic_expression>)
@@ -40,24 +38,22 @@ namespace cmoon
             constexpr fixed_valarray& operator=(const fixed_valarray&) = default;
             constexpr fixed_valarray& operator=(fixed_valarray&&) noexcept = default;
 
-            constexpr const value_type& underlying_index(std::size_t i) const noexcept
-            {
-                return data_[i];
-            }
+            constexpr fixed_valarray(underlying u) noexcept
+                : underlying_valarray<T, S>{std::move(u)} {}
 
-            constexpr value_type& underlying_index(std::size_t i) noexcept
-            {
-                return data_[i];
-            }
-
-            [[nodiscard]] static constexpr std::size_t underlying_size() noexcept
-            {
-                return std::tuple_size_v<underlying>;
-            }
-
-            [[nodiscard]] static constexpr std::size_t size() noexcept
+            [[nodiscard]] static consteval std::size_t size() noexcept
             {
                 return S;
+            }
+
+            constexpr const auto& underlying_index(std::size_t i) const noexcept
+            {
+                return data_[i];
+            }
+
+            constexpr auto& underlying_index(std::size_t i) noexcept
+            {
+                return data_[i];
             }
 
             constexpr fixed_valarray& operator+=(const fixed_valarray& rhs)
@@ -379,14 +375,14 @@ namespace cmoon
                 }(std::make_index_sequence<this->size()>{});
             }
 
-            shift_expression<fixed_valarray> shift(std::make_signed_t<std::size_t> count) const
+            shift_expression<fixed_valarray> shift(std::make_signed_t<std::size_t> i) const
             {
-                return {*this, count};
+                return {*this, i};
             }
 
-            cshift_expression<fixed_valarray> cshift(std::make_signed_t<std::size_t> count) const
+            cshift_expression<fixed_valarray> cshift(std::make_signed_t<std::size_t> i) const
             {
-                return {*this, count};
+                return {*this, i};
             }
         private:
             using underlying_valarray<T, S>::data_;

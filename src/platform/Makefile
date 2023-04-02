@@ -1,4 +1,5 @@
 include $(TEMPLATE_BEGIN)
+level=../../
 
 $(call add-build-library,cmoon.platform,cmoon.platform.architecture \
 										cmoon.platform.compiler \
@@ -8,14 +9,13 @@ $(call add-build-library,cmoon.platform,cmoon.platform.architecture \
 										cmoon.platform)
 	$(call build-library)
 
-$(call add-build-module-impl,cmoon.platform,platform.ixx \
-									   $(build_directory)/cmoon.platform.architecture.ifc \
-									   $(build_directory)/cmoon.platform.compiler.ifc \
-									   $(build_directory)/cmoon.platform.operating_system.ifc \
-									   $(build_directory)/cmoon.platform.cpp_version.ifc \
-									   $(build_directory)/cmoon.platform.bits.ifc)
+$(call add-build-module-impl,cmoon.platform,platform.ixx, \
+									   		cmoon.platform.architecture \
+									   		cmoon.platform.compiler \
+									   		cmoon.platform.operating_system \
+									   		cmoon.platform.cpp_version \
+									   		cmoon.platform.bits)
 	$(CXX) $(CXXFLAGS) $(CXXMODULE) $(CXXIMPL) \
-		$(call add-module-dir) \
 		$(call src-file,platform.ixx)
 
 $(call add-build-module-impl,cmoon.platform.architecture,architecture.ixx)

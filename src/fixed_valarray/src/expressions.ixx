@@ -79,7 +79,7 @@ namespace cmoon
         [[nodiscard]] constexpr operator override_base_type() const
         {
             return [this]<std::size_t... I>(std::index_sequence<I...>) {
-                return override_base_type{static_cast<const CRTP&>(*this).underlying_index(I)...};
+                return typename override_base_type::underlying{static_cast<const CRTP&>(*this).underlying_index(I)...};
             }(std::make_index_sequence<override_base_type::underlying_size()>{});
         }
         

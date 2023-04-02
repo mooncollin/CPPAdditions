@@ -20,11 +20,8 @@ As you can see, there are no header files. Oh no! Lucky for you (or maybe not so
 These libraries currently only build on Windows using MSVC. This is limited by the use of C++20 modules and standard library modules (std.core). Efforts to update the template with Linux or other platforms will come when I want to build on those platforms, given C++20 features are available to use.
 
 To build you will need [Make](https://www.gnu.org/software/make/). Each Makefile requires knowing three external variables:
-1. `LIBRARIES_PATH`
-2. `TEMPLATE_BEGIN`
-3. `TEMPLATE_END`
-
-The `LIBRARIES_PATH` variable is where these libraries reside. This makes referencing other libraries much easier, as they all have the same format.
+1. `TEMPLATE_BEGIN`
+2. `TEMPLATE_END`
 
 The `TEMPLATE_BEGIN` variable is the path to the Makefile_template_begin file containing useful macros in creating a build file. This is meant to be included into every Makefile at the top.
 
