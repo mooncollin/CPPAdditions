@@ -1,5 +1,5 @@
-include $(TEMPLATE_BEGIN)
-level=../../
+override level :=../../
+include $(CURDIR)/$(level)/Makefile_template_begin
 
 $(call add-build-library,cmoon.benchmarking,cmoon.benchmarking.do_not_optimize \
 											cmoon.benchmarking.run_result \
@@ -134,4 +134,4 @@ $(call add-bin-target,tests.exe,$(tests_directory)/main.cpp, \
 tests: $(bin_directory)/tests.exe
 	$(bin_directory)/tests.exe
 
-include $(TEMPLATE_END)
+include $(CURDIR)/$(level)/Makefile_template_end

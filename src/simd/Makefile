@@ -1,5 +1,5 @@
-include $(TEMPLATE_BEGIN)
-level=../../
+override level :=../../
+include $(CURDIR)/$(level)/Makefile_template_begin
 
 $(call add-build-library,cmoon.simd,cmoon.simd.m128 \
 									cmoon.simd)
@@ -14,4 +14,4 @@ $(call add-build-module-impl,cmoon.simd.m128,m128.ixx)
 	$(CXX) $(CXXFLAGS) $(CXXMODULE) $(CXXIMPL) \
 		$(call src-file,m128.ixx)
 
-include $(TEMPLATE_END)
+include $(CURDIR)/$(level)/Makefile_template_end

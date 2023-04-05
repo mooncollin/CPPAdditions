@@ -1,4 +1,4 @@
-include $(TEMPLATE_BEGIN)
+include Makefile_template_begin
 
 $(call add-build-library,cmoon.core,cmoon.core, \
 									cmoon.platform \
@@ -26,4 +26,4 @@ $(call add-build-module-impl,cmoon.core,core.ixx, \
 	$(CXX) $(CXXFLAGS) $(CXXMODULE) $(CXXIMPL) \
 		$(call src-file,core.ixx)
 
-include $(TEMPLATE_END)
+include Makefile_template_end

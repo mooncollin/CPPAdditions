@@ -1,5 +1,5 @@
-include $(TEMPLATE_BEGIN)
-level = ../../
+override level :=../../
+include $(CURDIR)/$(level)/Makefile_template_begin
 
 $(call add-build-library,cmoon.concepts,cmoon.concepts)
 	$(call build-library)
@@ -27,13 +27,12 @@ $(call add-bin-target,tests.exe,$(tests_directory)/main.cpp, \
 								cmoon.type_traits \
 								cmoon.test \
 								cmoon.utility \
-								cmoon.ranges \
 								cmoon.tuple \
 								cmoon.scope)
 	$(CXX) $(CXXFLAGS) $(CXXEXECUTABLE) \
 		$(call test-file,main.cpp)
 
 tests: $(bin_directory)/tests.exe
-	$(bin_directory)/tests.exe
+	@$(bin_directory)/tests.exe
 
-include $(TEMPLATE_END)
+include $(CURDIR)/$(level)/Makefile_template_end

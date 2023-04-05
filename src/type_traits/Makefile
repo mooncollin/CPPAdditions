@@ -1,5 +1,5 @@
-include $(TEMPLATE_BEGIN)
-level = ../../
+override level :=../../
+include $(CURDIR)/$(level)/Makefile_template_begin
 
 $(call add-build-library,cmoon.type_traits,cmoon.type_traits.copy_traits \
 										   cmoon.type_traits.is_any_of \
@@ -57,4 +57,4 @@ $(call add-build-module-impl,cmoon.type_traits.function_traits,function_traits.i
 	$(CXX) $(CXXFLAGS) $(CXXMODULE) $(CXXIMPL) \
 		$(call src-file,function_traits.ixx)
 
-include $(TEMPLATE_END)
+include $(CURDIR)/$(level)/Makefile_template_end

@@ -1,5 +1,5 @@
-include $(TEMPLATE_BEGIN)
-level=../../
+override level :=../../
+include $(CURDIR)/$(level)/Makefile_template_begin
 
 $(call add-build-library,cmoon.meta,cmoon.meta.choice_t \
 									cmoon.meta.type_list \
@@ -60,4 +60,4 @@ $(call add-bin-target,tests.exe,$(tests_directory)/main.cpp, \
 tests: $(bin_directory)/tests.exe
 	$(bin_directory)/tests.exe
 
-include $(TEMPLATE_END)
+include $(CURDIR)/$(level)/Makefile_template_end

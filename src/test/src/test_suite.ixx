@@ -25,6 +25,11 @@ namespace cmoon::test
 				return *(ptr->get());
 			}
 
+			pointer operator->() noexcept
+			{
+				return ptr->get();
+			}
+
 			test_suite_iterator& operator++()
 			{
 				++ptr;

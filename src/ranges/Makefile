@@ -1,5 +1,5 @@
-include $(TEMPLATE_BEGIN)
-level=../../
+override level :=../../
+include $(CURDIR)/$(level)/Makefile_template_begin
 
 $(call add-build-library,cmoon.ranges,cmoon.ranges.zip \
 									  cmoon.ranges.enumerate \
@@ -43,4 +43,4 @@ $(call add-build-module-impl,cmoon.ranges.utility,utility.ixx)
 	$(CXX) $(CXXFLAGS) $(CXXMODULE) $(CXXIMPL) \
 		$(call src-file,utility.ixx)
 
-include $(TEMPLATE_END)
+include $(CURDIR)/$(level)/Makefile_template_end

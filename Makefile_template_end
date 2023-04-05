@@ -5,7 +5,7 @@ clean_build_target =*
 else
 generic_level=../
 level_indirection=
-clean_build_target =cmoon.$(current_dir).*
+clean_build_target =cmoon.$(notdir $(CURDIR)).*
 endif
 
 $(build_directory)/cmoon.%.$(module_file_extension):

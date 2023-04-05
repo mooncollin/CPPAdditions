@@ -1,5 +1,5 @@
-include $(TEMPLATE_BEGIN)
-level = ../../
+override level :=../../
+include $(CURDIR)/$(level)/Makefile_template_begin
 
 $(call add-build-library,cmoon.test,cmoon.test.assert_exception \
 									cmoon.test.assert \
@@ -57,4 +57,4 @@ $(call add-build-module-impl,cmoon.test.text_test_runner,text_test_runner.ixx, \
 	$(CXX) $(CXXFLAGS) $(CXXMODULE) $(CXXIMPL) \
 		$(call src-file,text_test_runner.ixx)
 
-include $(TEMPLATE_END)
+include $(CURDIR)/$(level)/Makefile_template_end

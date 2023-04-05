@@ -1,5 +1,5 @@
-include $(TEMPLATE_BEGIN)
-level=../../
+override level :=../../
+include $(CURDIR)/$(level)/Makefile_template_begin
 
 $(call add-build-library,cmoon.platform,cmoon.platform.architecture \
 										cmoon.platform.compiler \
@@ -38,4 +38,4 @@ $(call add-build-module-impl,cmoon.platform.bits,bits.ixx)
 	$(CXX) $(CXXFLAGS) $(CXXMODULE) $(CXXIMPL) \
 		$(call src-file,bits.ixx)
 
-include $(TEMPLATE_END)
+include $(CURDIR)/$(level)/Makefile_template_end

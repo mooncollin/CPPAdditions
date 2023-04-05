@@ -1,5 +1,5 @@
-include $(TEMPLATE_BEGIN)
-level=../../
+override level :=../../
+include $(CURDIR)/$(level)/Makefile_template_begin
 
 $(call add-build-library,cmoon.scope,cmoon.scope.scope_exit \
 									 cmoon.scope.scope_fail \
@@ -36,4 +36,4 @@ $(call add-build-module-impl,cmoon.scope.unique_resource,unique_resource.ixx, \
 	$(CXX) $(CXXFLAGS) $(CXXMODULE) $(CXXIMPL) \
 		$(call src-file,unique_resource.ixx)
 
-include $(TEMPLATE_END)
+include $(CURDIR)/$(level)/Makefile_template_end

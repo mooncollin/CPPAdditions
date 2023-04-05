@@ -4,7 +4,6 @@ import std.core;
 
 import cmoon.utility;
 import cmoon.scope;
-import cmoon.ranges;
 
 import cmoon.test.test_case;
 import cmoon.test.test_suite;
@@ -94,14 +93,19 @@ namespace cmoon::test
 
 				output_.get() << "\n\n=======================================\n";
 
-				for (const auto& [result, test_case] : cmoon::ranges::views::zip(results, t_suite))
 				{
-					if (!result.passed())
+					auto results_it {std::ranges::begin(results)};
+					auto t_suite_it {std::ranges::begin(t_suite)};
+
+					for (; results_it != std::ranges::end(results); ++results_it, ++t_suite_it)
 					{
-						output_.get() << '\n';
-						output_.get() << test_case.name();
-						output_.get() << '\n';
-						print_test_result(result);
+						if (!results_it->passed())
+						{
+							output_.get() << '\n';
+							output_.get() << t_suite_it->name();
+							output_.get() << '\n';
+							print_test_result(*results_it);
+						}
 					}
 				}
 

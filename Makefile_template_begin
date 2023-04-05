@@ -29,7 +29,6 @@ ifeq ($(OS),Windows_NT)
 	add-build-impl			=$(call add-build-target,$(1).$(object_file_extension),$(2),$(addsuffix .$(module_file_extension),$(3)))
 	add-build-module-impl 	=$(call add-build-target,$(1).$(object_file_extension) $(1).$(module_file_extension),$(2),$(addprefix $(build_directory)/,$(addsuffix .$(module_file_extension),$(3))))
 	add-build-library   	=$(call add-build-target,$(1).lib,$(addprefix $(build_directory)/,$(addsuffix .$(object_file_extension),$(2))),$(addprefix $(build_directory)/,$(addsuffix .lib,$(3))))
-	current_dir				=$(notdir $(shell cd))
 endif
 
 level=
@@ -48,8 +47,8 @@ src-file   	 =$(call make-path,$(call get-src-directory)%$(1))
 test-file  	 =$(call make-path,$(call get-tests-directory)%$(1))
 build-file 	 =$(call make-path,$(call get-build-directory)%$(1))
 
-add-build-target =$(addprefix $(build_directory)/,$(1)): $(2) | $(build_directory) $(3)
-add-bin-target   =$(addprefix $(bin_directory)/,$(1)): $(2) | $(bin_directory) $(addprefix $(build_directory)/,$(addsuffix .lib,$(3)))
+add-build-target =$(addprefix $(build_directory)/,$(1)): $(2) $(3) | $(build_directory)
+add-bin-target   =$(addprefix $(bin_directory)/,$(1)): $(2) $(addprefix $(build_directory)/,$(addsuffix .lib,$(3))) | $(bin_directory)
 
 define build-library
 	$(CXX_LIB) \
