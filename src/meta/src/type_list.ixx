@@ -33,6 +33,8 @@ namespace cmoon::meta
 				requires(N < size())
 			using type = std::tuple_element_t<N, tuple_t>;
 			
+			#pragma warning(push)
+			#pragma warning(disable : 4305)
 			template<typename T>
 			[[nodiscard]] static constexpr index_type index() noexcept
 			{
@@ -52,6 +54,7 @@ namespace cmoon::meta
 					}
 				}(std::make_index_sequence<size()>{});
 			}
+			#pragma warning(pop)
 
 			template<typename T>
 			[[nodiscard]] static constexpr bool contains() noexcept
@@ -114,6 +117,7 @@ namespace cmoon::meta
 			struct sub_list_helper<Offset, Count, T, Ts...> : sub_list_helper<Offset - 1, Count, Ts...> {};
 
 			template<index_type Count, typename T, typename... Ts>
+				requires(Count != 0)
 			struct sub_list_helper<0, Count, T, Ts...> : std::type_identity<
 				typename type_list<T>::template concatenate<
 					typename sub_list_helper<0, Count - 1, Ts...>::type
@@ -122,6 +126,12 @@ namespace cmoon::meta
 
 			template<index_type Count>
 			struct sub_list_helper<0, Count> : std::type_identity<type_list<>> {};
+
+			template<index_type Offset, typename... Ts>
+			struct sub_list_helper<Offset, 0, Ts...> : std::type_identity<type_list<>> {};
+
+			template<typename... Ts>
+			struct sub_list_helper<0, 0, Ts...> : std::type_identity<type_list<>> {};
 
 			template<class Out, class In>
 			struct unique_helper;

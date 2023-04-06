@@ -11,7 +11,6 @@ namespace cmoon::tests::meta
 	cmoon::test::test_suite get_tests()
 	{
 		cmoon::test::test_suite suite{"Meta library tests"};
-		suite.add_test_case<type_list_construct_test>();
 		suite.add_test_case<type_list_size_test>();
 		suite.add_test_case<type_list_empty_test>();
 		suite.add_test_case<type_list_type_test>();

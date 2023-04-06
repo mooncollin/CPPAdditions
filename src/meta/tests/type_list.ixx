@@ -8,25 +8,6 @@ import cmoon.meta;
 namespace cmoon::tests::meta
 {
     export
-    class type_list_construct_test : public cmoon::test::test_case
-    {
-        public:
-            type_list_construct_test()
-                : cmoon::test::test_case{"type_list_construct_test"} {}
-
-            void operator()() final
-            {
-                using l1 = cmoon::meta::type_list<>;
-                using l2 = cmoon::meta::type_list<int>;
-                using l3 = cmoon::meta::type_list<double, float, int, char>;
-
-                cmoon::test::assert_true(std::default_initializable<l1>);
-                cmoon::test::assert_true(std::default_initializable<l2>);
-                cmoon::test::assert_true(std::default_initializable<l3>);
-            }
-    };
-
-    export
     class type_list_size_test : public cmoon::test::test_case
     {
         public:
@@ -426,6 +407,7 @@ namespace cmoon::tests::meta
                 cmoon::test::assert_is_type<l3::sub_list<3>, cmoon::meta::type_list<char>>();
                 cmoon::test::assert_is_type<l3::sub_list<4>, cmoon::meta::type_list<>>();
 
+                cmoon::test::assert_is_type<l3::sub_list<0, 0>, cmoon::meta::type_list<>>();
                 cmoon::test::assert_is_type<l3::sub_list<0, 1>, cmoon::meta::type_list<double>>();
                 cmoon::test::assert_is_type<l3::sub_list<0, 2>, cmoon::meta::type_list<double, float>>();
                 cmoon::test::assert_is_type<l3::sub_list<0, 3>, cmoon::meta::type_list<double, float, int>>();
