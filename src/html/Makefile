@@ -32,7 +32,8 @@ $(call add-build-module-impl,cmoon.html.no_attributes,no_attributes.ixx)
 
 $(call add-build-module-impl,cmoon.html.element,element.ixx, \
 												cmoon.html.tag_concept \
-												cmoon.html.no_attributes)
+												cmoon.html.no_attributes \
+												cmoon.type_traits)
 	$(CXX) $(CXXFLAGS) $(CXXMODULE) $(CXXIMPL) \
 		$(call src-file,element.ixx)
 
@@ -99,7 +100,8 @@ $(call add-bin-target,tests.exe,$(tests_directory)/main.cpp, \
 								cmoon.test \
 								cmoon.concepts \
 								cmoon.utility \
-								cmoon.ranges)
+								cmoon.ranges \
+								cmoon.named_tuple)
 	$(CXX) $(CXXFLAGS) $(CXXEXECUTABLE) \
 		$(call test-file,main.cpp)
 

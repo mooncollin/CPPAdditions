@@ -38,6 +38,10 @@ namespace cmoon
                           "Types in named_tuple must be unique");
 
             constexpr named_tuple() noexcept(std::conjunction_v<std::is_nothrow_default_constructible<Ts>...>) = default;
+            constexpr named_tuple(const named_tuple&) = default;
+            constexpr named_tuple(named_tuple&&) noexcept = default;
+            constexpr named_tuple& operator=(const named_tuple&) = default;
+            constexpr named_tuple& operator=(named_tuple&&) noexcept = default;
 
             template<class... Ts2>
                 requires(sizeof...(Ts2) <= sizeof...(Ts) &&

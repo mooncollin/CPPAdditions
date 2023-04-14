@@ -8,3 +8,5 @@ export import cmoon.utility;
 export import cmoon.meta;
 export import cmoon.ranges;
 export import cmoon.test;
+export import cmoon.named_tuple;
+export import cmoon.html;

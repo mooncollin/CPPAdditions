@@ -17,7 +17,7 @@ namespace cmoon::html
         }
         else
         {
-            return static_attributes{std::forward<Attributes>(attributes)...};
+            return cmoon::html::static_attributes{std::forward<Attributes>(attributes)...};
         }
     }
 }

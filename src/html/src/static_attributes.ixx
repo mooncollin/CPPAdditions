@@ -30,12 +30,18 @@ namespace cmoon::html
     template<typename... Attributes>
     class static_attributes
     {
-        using nt = cmoon::named_tuple<Attributes...>;
+        using nt = cmoon::named_tuple<std::decay_t<Attributes>...>;
         using types = typename nt::types;
         static_assert(types::template transform<to_parent>::is_unique(),
                       "Attributes must be unique");
 
         public:
+            constexpr static_attributes() = default;
+            constexpr static_attributes(const static_attributes&) = default;
+            constexpr static_attributes(static_attributes&&) noexcept = default;
+            constexpr static_attributes& operator=(const static_attributes&) = default;
+            constexpr static_attributes& operator=(static_attributes&&) = default;
+
             template<class... Attributes2>
             constexpr static_attributes(Attributes2... attrs) noexcept
                 : attributes_{cmoon::no_ordering, std::move(attrs)...} {}
