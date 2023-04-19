@@ -6,6 +6,7 @@ import cmoon.type_traits;
 
 import cmoon.html.tag_concept;
 import cmoon.html.no_attributes;
+import cmoon.html.tag_traits;
 
 namespace cmoon::html
 {
@@ -263,117 +264,126 @@ namespace cmoon::html
     template<tag_concept Tag>
     element(Tag&&) -> element<unwrap_reference_keep_const_t<Tag>, no_attributes_t>;
 
-    struct pretty_print_t
+    struct indentation_t
     {
         static int xalloc_idx;
+        static int force_xalloc_idx;
 
         int num_spaces;
     };
 
     export
     template<class CharT, class Traits>
-    std::basic_ostream<CharT, Traits>& operator<<(std::basic_ostream<CharT, Traits>& os, const pretty_print_t& pp)
+    std::basic_ostream<CharT, Traits>& operator<<(std::basic_ostream<CharT, Traits>& os, const indentation_t& pp)
     {
-        os.iword(pretty_print_t::xalloc_idx) = pp.num_spaces;
+        os.iword(indentation_t::xalloc_idx) = pp.num_spaces;
         return os;
     }
 
-    int pretty_print_t::xalloc_idx = std::ios_base::xalloc();
+    int indentation_t::xalloc_idx       = std::ios_base::xalloc();
+    int indentation_t::force_xalloc_idx = std::ios_base::xalloc();
 
     export
-    constexpr pretty_print_t pretty_print(int spaces) noexcept
+    constexpr indentation_t indentation(int spaces) noexcept
     {
         return {spaces};
     }
 
     export
     template<class CharT, class Traits>
-    std::basic_ostream<CharT, Traits>& no_pretty_print(std::basic_ostream<CharT, Traits>& os)
+    std::basic_ostream<CharT, Traits>& no_indentation(std::basic_ostream<CharT, Traits>& os)
     {
-        os.iword(pretty_print_t::xalloc_idx) = 0;
+        os.iword(indentation_t::xalloc_idx) = 0;
+        return os;
+    }
+
+    export
+    template<class CharT, class Traits>
+    std::basic_ostream<CharT, Traits>& force_indentation(std::basic_ostream<CharT, Traits>& os)
+    {
+        os.iword(indentation_t::force_xalloc_idx) = 1;
+        return os;
+    }
+
+    export
+    template<class CharT, class Traits>
+    std::basic_ostream<CharT, Traits>& print_indentation(std::basic_ostream<CharT, Traits>& os)
+    {
+        const auto spaces {os.iword(indentation_t::xalloc_idx)};
+
+        for (int i {0}; i < spaces; ++i)
+        {
+            std::cout << ' ';
+        }
+
         return os;
     }
 
     template<class CharT, class Traits, class T>
-    void print_helper(std::basic_ostream<CharT, Traits>& os, const T& other, bool)
+    void print_helper(std::basic_ostream<CharT, Traits>& os, const T& other, bool, const int, const int indentation)
     {
+        for (int i {0}; i < indentation; ++i)
+        {
+            os << ' ';
+        }
+
         os << other;
     }
 
     template<class CharT, class Traits, class Tag, class Attributes, class... Children>
-    void print_helper(std::basic_ostream<CharT, Traits>& os, const element<Tag, Attributes, Children...>& e, const bool first)
+    void print_helper(std::basic_ostream<CharT, Traits>& os, const element<Tag, Attributes, Children...>& e, const bool first, [[maybe_unused]] const int indentation_increment, const int indentation)
     {
-        auto& pretty_print_spaces {os.iword(pretty_print_t::xalloc_idx)};
-
+        using t_traits = tag_traits<Tag>;
         if (!first)
         {
-            if (pretty_print_spaces > 0)
-            {
-                os << '\n';
-            }
-            for (int i {0}; i < pretty_print_spaces; ++i)
+            for (int i {0}; i < indentation; ++i)
             {
                 os << ' ';
             }
         }
 
-        os << '<';
-        os << e.tag().name();
-        if constexpr (!std::same_as<std::decay_t<Attributes>, no_attributes_t>)
+        if constexpr (!t_traits::is_end_tag())
         {
-            os << ' ';
-            os << e.attributes();
-        }
-        os << '>';
-        if (!e.tag().is_self_closing())
-        {
+            os << '<';
+            os << e.tag().name();
+            if constexpr (!std::same_as<std::decay_t<Attributes>, no_attributes_t>)
+            {
+                os << ' ';
+                os << e.attributes();
+            }
+            os << '>';
             if constexpr (sizeof...(Children) > 0)
             {
-                if (!first)
+                if (indentation > 0)
                 {
-                    pretty_print_spaces *= 2;
-                };
-                std::apply([&](const auto&... child) {
-                    (print_helper(os, child, false), ...);
-                }, e.children());
-                if (!first)
-                {
-                    pretty_print_spaces /= 2;
+                    os << '\n';
                 }
+                std::apply([&](const auto&... child) {
+                    (print_helper(os, child, false, indentation_increment, indentation + indentation_increment * !first), ...);
+                }, e.children());
                 if constexpr (std::disjunction_v<cmoon::is_specialization<Children, element>...>)
                 {
-                    if (pretty_print_spaces > 0)
-                    {
-                        os << '\n';
-                    }
                     if (!first)
                     {
-                        for (int i {0}; i < pretty_print_spaces; ++i)
+                        for (int i {0}; i < indentation; ++i)
                         {
                             os << ' ';
                         }
                     }
                 }
             }
+        }
+        if (!e.tag().is_self_closing())
+        {
             os << "</";
             os << e.tag().name();
             os << '>';
         }
-        else
+        if constexpr (!t_traits::is_start_tag())
         {
-            if (first)
+            if (indentation > 0)
             {
-                if (pretty_print_spaces > 0)
-                {
-                    os << '\n';
-                }
-            }
-            if (!first)
-            {
-                for (int i {0}; i < pretty_print_spaces; ++i)
-                {
-                    os << ' ';
-                }
+                os << '\n';
             }
         }
     }
@@ -382,7 +392,10 @@ namespace cmoon::html
     template<class Tag, class Attributes, class... Children>
     std::ostream& operator<<(std::ostream& os, const element<Tag, Attributes, Children...>& e)
     {
-        print_helper(os, e, true);
+        const auto indentation {os.iword(indentation_t::xalloc_idx)};
+        const auto force_indentation {os.iword(indentation_t::force_xalloc_idx)};
+        print_helper(os, e, !force_indentation, indentation, indentation);
+        os.iword(indentation_t::force_xalloc_idx) = 0;
         return os;
     }
 }

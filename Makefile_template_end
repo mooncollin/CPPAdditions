@@ -14,8 +14,13 @@ $(build_directory)/cmoon.%.$(module_file_extension):
 $(build_directory)/cmoon.%.lib:
 	@$(MAKE) -C $(generic_level)$* $(level_indirection)$(build_directory)/cmoon.$*.lib
 
-$(build_directory)/cmoon..tests.%.lib:
+$(build_directory)/cmoon.tests.%.lib:
 	@$(MAKE) -C $(generic_level)$* $(level_indirection)$(build_directory)/cmoon.tests.$*.lib
+
+ifeq ($(level),../)
+$(build_directory)/cmoon.core.lib:
+	@$(MAKE) -C ../ build/$(CONFIG)/cmoon.core.lib
+endif
 
 $(build_directory):
 	@$(call make-dir,$(call make-path,$(build_directory)))

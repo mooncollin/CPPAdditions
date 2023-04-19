@@ -6,6 +6,9 @@ $(call add-build-library,cmoon.html,cmoon.html.tags \
 									cmoon.html.attributes \
 									cmoon.html.make_attributes \
 									cmoon.html.static_attributes \
+									cmoon.html.tag_traits \
+									cmoon.html.end_tag \
+									cmoon.html.start_tag \
 									cmoon.html.no_attributes \
 									cmoon.html.tag_concept \
 									cmoon.html)
@@ -14,6 +17,9 @@ $(call add-build-library,cmoon.html,cmoon.html.tags \
 $(call add-build-module-impl,cmoon.html,html.ixx, \
 										cmoon.html.tag_concept \
 										cmoon.html.no_attributes \
+										cmoon.html.start_tag \
+										cmoon.html.end_tag \
+										cmoon.html.tag_traits \
 										cmoon.html.static_attributes \
 										cmoon.html.make_attributes \
 										cmoon.html.attributes \
@@ -30,9 +36,24 @@ $(call add-build-module-impl,cmoon.html.no_attributes,no_attributes.ixx)
 	$(CXX) $(CXXFLAGS) $(CXXMODULE) $(CXXIMPL) \
 		$(call src-file,no_attributes.ixx)
 
+$(call add-build-module-impl,cmoon.html.start_tag,start_tag.ixx)
+	$(CXX) $(CXXFLAGS) $(CXXMODULE) $(CXXIMPL) \
+		$(call src-file,start_tag.ixx)
+
+$(call add-build-module-impl,cmoon.html.end_tag,end_tag.ixx)
+	$(CXX) $(CXXFLAGS) $(CXXMODULE) $(CXXIMPL) \
+		$(call src-file,end_tag.ixx)
+
+$(call add-build-module-impl,cmoon.html.tag_traits,tag_traits.ixx, \
+													cmoon.html.start_tag \
+													cmoon.html.end_tag)
+	$(CXX) $(CXXFLAGS) $(CXXMODULE) $(CXXIMPL) \
+		$(call src-file,tag_traits.ixx)
+
 $(call add-build-module-impl,cmoon.html.element,element.ixx, \
 												cmoon.html.tag_concept \
 												cmoon.html.no_attributes \
+												cmoon.html.tag_traits \
 												cmoon.type_traits)
 	$(CXX) $(CXXFLAGS) $(CXXMODULE) $(CXXIMPL) \
 		$(call src-file,element.ixx)
@@ -49,7 +70,9 @@ $(call add-build-module-impl,cmoon.html.attributes,attributes.ixx)
 
 $(call add-build-module-impl,cmoon.html.tags,tags.ixx, \
 											 cmoon.html.no_attributes \
-											 cmoon.html.element)
+											 cmoon.html.element \
+											 cmoon.html.start_tag \
+											 cmoon.html.end_tag)
 	$(CXX) $(CXXFLAGS) $(CXXMODULE) $(CXXIMPL) \
 		$(call src-file,tags.ixx)
 
