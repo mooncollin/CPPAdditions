@@ -1,0 +1,36 @@
+{% extends "templates/end_page.html" %}
+{% set namespaces = "cmoon::meta" %}
+{% set library_name = "Metaprogramming" %}
+{% set item_name = "type_list" %}
+{% set end_name = "empty" %}
+{% set templates = "<Types...>" %}
+{% block content2 %}
+{{macros.overload_set([
+"
+[[nodiscard]] static constexpr bool empty() noexcept;
+"
+])}}
+<p>
+    Returns <code>true</code> if <code>size() == 0</code>, else <code>false</code>.
+</p>
+{{macros.function_stats(
+    [],
+    "<code>true</code> if <code>size() == 0</code>, <code>false</code> otherwise.",
+    "This function never throws exceptions",
+    "Constant."
+)}}
+{{macros.example_code(
+"
+import <type_traits>;
+
+import cmoon.meta;
+
+int main()
+{
+    using tl = cmoon::meta::type_list<>;
+
+    static_assert(tl::empty());
+}
+"
+)}}
+{% endblock %}

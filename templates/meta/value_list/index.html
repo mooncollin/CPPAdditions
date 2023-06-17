@@ -91,7 +91,7 @@ using value_list<Values...>::transform_to_types<Function> = type_list<typename F
 {{macros.code_block(
 "
 template<auto... Values>
-template<index_type Offset, index_type Count = -1>
+template<index_type Offset, index_type Count = npos>
 using value_list<Values...>::sub_list<Offset, Count> = /* see below */;
 "
 )}}
@@ -103,6 +103,7 @@ using value_list<Values...>::sub_list<Offset, Count> = /* see below */;
 </p>
 <h3>Member functions</h3>
 {{macros.member_item("size", "Returns the number of values", "public static member function")}}
+{{macros.member_item("empty", "Returns whether this <code>value_list</code> is empty", "public static member function")}}
 {{macros.member_item("get", "Returns the value at index <code>N</code>", "public static member function")}}
 {{macros.member_item("contains", "Checks if a given value is present", "public static member function")}}
 {{macros.member_item("to_tuple", "Creates a <code>std::tuple</code> from <code>Values...</code>", "public static member function")}}

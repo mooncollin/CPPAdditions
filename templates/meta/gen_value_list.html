@@ -1,0 +1,23 @@
+{% extends "templates/item_page.html" %}
+{% set namespaces = "cmoon::meta" %}
+{% set library_name = "Metaprogramming" %}
+{% set item_name = "gen_value_list" %}
+{% block nested %}../{% endblock %}
+{% block content2 %}
+{{macros.defined("cmoon.meta", github_url + "/meta/meta.ixx")}}
+{{macros.overload_set([
+"
+template<std::size_t N, auto V>
+struct gen_value_list;
+"
+])}}
+{{macros.member_types(
+    ["type", "A <code>value_list</code> contains <code>N</code> copies of <code>V</code>"]
+)}}
+{{macros.overload_set(
+["
+template<std::size_t N, auto V>
+using gen_value_list_t = typename gen_value_list<N, V>::type;
+"
+], False)}}
+{% endblock %}

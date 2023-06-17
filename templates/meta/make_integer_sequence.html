@@ -1,0 +1,14 @@
+{% extends "templates/item_page.html" %}
+{% set namespaces = "cmoon::meta" %}
+{% set library_name = "Metaprogramming" %}
+{% set item_name = "make_integer_sequence" %}
+{% block nested %}../{% endblock %}
+{% block content2 %}
+{{macros.defined("cmoon.meta", github_url + "/meta/meta.ixx")}}
+{{macros.overload_set([
+"
+template<class T, T N>
+using make_integer_sequence = cmoon::meta::iota<static_cast<T>(0), N>;
+"
+])}}
+{% endblock %}

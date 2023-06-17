@@ -1,4 +1,4 @@
-export module cmoon.meta.type_list;
+export module cmoon.meta:type_list;
 
 import std.core;
 
@@ -110,28 +110,11 @@ namespace cmoon::meta
 					typename filter_helper<Predicate, TypeN...>::type
 				> {};
 
-			template<index_type Offset, index_type Count, typename... Ts>
+			template<index_type Offset, class Count>
 			struct sub_list_helper;
 
-			template<index_type Offset, index_type Count, typename T, typename... Ts>
-			struct sub_list_helper<Offset, Count, T, Ts...> : sub_list_helper<Offset - 1, Count, Ts...> {};
-
-			template<index_type Count, typename T, typename... Ts>
-				requires(Count != 0)
-			struct sub_list_helper<0, Count, T, Ts...> : std::type_identity<
-				typename type_list<T>::template concatenate<
-					typename sub_list_helper<0, Count - 1, Ts...>::type
-				>
-			> {};
-
-			template<index_type Count>
-			struct sub_list_helper<0, Count> : std::type_identity<type_list<>> {};
-
-			template<index_type Offset, typename... Ts>
-			struct sub_list_helper<Offset, 0, Ts...> : std::type_identity<type_list<>> {};
-
-			template<typename... Ts>
-			struct sub_list_helper<0, 0, Ts...> : std::type_identity<type_list<>> {};
+			template<index_type Offset, std::size_t... I>
+			struct sub_list_helper<Offset, std::index_sequence<I...>> : std::type_identity<type_list<type<I + Offset>...>> {};
 
 			template<class Out, class In>
 			struct unique_helper;
@@ -163,8 +146,8 @@ namespace cmoon::meta
 			using transform = type_list<typename Function<Types>::type...>;
 
 			template<index_type Offset, index_type Count = npos>
-				requires(Offset <= size())
-			using sub_list = typename sub_list_helper<Offset, Count, Types...>::type;
+				requires(Offset < size())
+			using sub_list = typename sub_list_helper<Offset, std::make_index_sequence<std::min(size() - Offset, Count)>>::type;
 
 			using unique = typename unique_helper<type_list<>, type_list>::type;
 

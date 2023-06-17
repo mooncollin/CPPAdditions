@@ -1,4 +1,4 @@
-export module cmoon.meta.choice_t;
+export module cmoon.meta:choice_t;
 
 namespace cmoon::meta
 {

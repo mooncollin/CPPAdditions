@@ -1,0 +1,14 @@
+{% extends "templates/item_page.html" %}
+{% set namespaces = "cmoon::meta" %}
+{% set library_name = "Metaprogramming" %}
+{% set item_name = "index_sequence" %}
+{% block nested %}../{% endblock %}
+{% block content2 %}
+{{macros.defined("cmoon.meta", github_url + "/meta/meta.ixx")}}
+{{macros.overload_set([
+"
+template<std::size_t... Ints>
+using index_sequence = cmoon::meta::value_list<Ints...>;
+"
+])}}
+{% endblock %}

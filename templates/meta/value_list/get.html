@@ -2,7 +2,7 @@
 {% set namespaces = "cmoon::meta" %}
 {% set library_name = "Metaprogramming" %}
 {% set item_name = "value_list" %}
-{% set end_name = "size" %}
+{% set end_name = "get" %}
 {% set templates = "<Values...>" %}
 {% block content2 %}
 {{macros.overload_set([
@@ -12,7 +12,7 @@ template<index_type N>
 "
 ])}}
 <p>
-    Returns the value at index <code>N</code>. This function is ill-formed if <code>N &lt; size()</code>.
+    Returns the value at index <code>N</code>. This function is ill-formed if <code>N &ge; size()</code>.
 </p>
 {{macros.function_stats(
     [],

@@ -1,4 +1,4 @@
 export module cmoon.meta;
-export import cmoon.meta.choice_t;
-export import cmoon.meta.type_list;
-export import cmoon.meta.value_list;
+export import :choice_t;
+export import :type_list;
+export import :value_list;

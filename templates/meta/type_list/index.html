@@ -105,28 +105,32 @@ using type_list<Types...>::unique = /* see below */;
 <p>
     The <code>unique</code> alias denotes a <code>type_list</code> containing only one of each type from its original <code>type_list</code>.
 </p>
-<h4 id="find_header"><code>find</code></h4>
+<h4><code>find</code></h4>
 {{macros.code_block(
 "
 template<typename... Types>
-template<template<typename> class Predicate>
-using type_list<Types...>::find<Predicate> = /* see below */;
+template<template<typename> class Predicate, class Default = cmoon::nonesuch>
+using type_list<Types...>::find<Predicate, Default> = /* see below */;
 "
 )}}
 <p>
     The <code>find</code> alias denotes a type from this <code>type_list</code> in which <code>Predicate&lt;Types&gt;::value</code> is <code>true</code> first.
-    If there is no type in which <code>Predicate&lt;Types&gt;::value</code> is <code>true</code>, then the program is ill-formed.
+    If there is no type in which <code>Predicate&lt;Types&gt;::value</code> is <code>true</code>, then <code>type_list::find</code> is <code>Default</code>.
 </p>
 <h4><code>complete_type</code></h4>
 {{macros.code_block(
 "
 template<typename... Types>
 template<template<typename...> typename T, typename... ExtraArgs>
-using type_list<Types...>::complete_type<T, ExtraArgs...> = T<Types..., ExtraArgs...>;
+using type_list<Types...>::complete_type<T, ExtraArgs...> = T<ExtraArgs..., Types...>;
 "
 )}}
+<p>
+    Note: The <code>ExtraArgs...</code> go in front of the <code>type_list</code>'s types.
+</p>
 <h3>Member functions</h3>
 {{macros.member_item("size", "Returns the number of types", "public static member function")}}
+{{macros.member_item("empty", "Returns whether this <code>type_list</code> is empty", "public static member function")}}
 {{macros.member_item("index", "Returns the index of a given type", "public static member function", "index_f.html")}}
 {{macros.member_item("contains", "Checks if a given type is present", "public static member function")}}
 {{macros.member_item("is_unique", "Checks if all types are unique", "public static member function")}}
@@ -135,5 +139,4 @@ using type_list<Types...>::complete_type<T, ExtraArgs...> = T<Types..., ExtraArg
 {{macros.member_item("any_of", "Checks if any types return true from the given predicate", "public static member function")}}
 {{macros.member_item("none_of", "Checks if no types return true from the given predicate", "public static member function")}}
 {{macros.member_item("for_each", "Calls the given function with each type", "public static member function")}}
-{{macros.member_item("can_find", "Checks if it is well-formed to call <code><a href='#find_header'>find</a></code> with the given predicate", "public static member function")}}
 {% endblock %}

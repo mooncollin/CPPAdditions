@@ -7,7 +7,7 @@
         <link rel="stylesheet" href="../../css/bootstrap.min.css">
         <link rel="stylesheet" href="../../css/main.css">
         <link rel="stylesheet" href="../../css/default.min.css">
-        <title>cmoon::meta::type_list::&lt;Types...&gt;is_unique | Docs</title>
+        <title>cmoon::meta::value_list::&lt;Values...&gt;empty | Docs</title>
     </head>
     <body class="lh-sm">
         <div id="header">
@@ -37,10 +37,10 @@
                 <ol class="breadcrumb mb-1">
                                 <li class="breadcrumb-item action"><a href="../../index.html">Home</a></li>
                                 <li class="breadcrumb-item action"><a href="../index.html">Metaprogramming</a></li>
-                                <li class="breadcrumb-item action"><a href="index.html">cmoon::meta::type_list</a></li>
+                                <li class="breadcrumb-item action"><a href="index.html">cmoon::meta::value_list</a></li>
                 </ol>
             </nav>
-<h1><small>cmoon::meta::type_list&lt;Types...&gt;::</small>is_unique</h1>
+<h1><small>cmoon::meta::value_list&lt;Values...&gt;::</small>empty</h1>
 <hr>
 <div class="mx-5">
     
@@ -51,7 +51,7 @@
                 <td class="p-0"><small><pre class="mb-0">
 <code class="language-cpp rounded py-0 pe-0 bg-transparent">
 
-[[nodiscard]] static constexpr bool is_unique() noexcept;
+[[nodiscard]] static constexpr bool empty() noexcept;
 
 </code>
 </pre></small></td>
@@ -60,7 +60,7 @@
     </tbody>
 </table>
 <p>
-    Returns <code>true</code> if all of <code>Types...</code> are not the same, returns <code>false</code> otherwise. Always true if empty.
+    Returns <code>true</code> if <code>size() == 0</code>, else <code>false</code>.
 </p>
 <div class="container ">
     <h3>Parameters</h3>
@@ -72,7 +72,7 @@
         <div class="container  mt-2">
     <h3>Return value</h3>
     
-            <p><code>true</code> if all of <code>Types...</code> are not the same, <code>false</code> otherwise.</p>
+            <p><code>true</code> if <code>size() == 0</code>, <code>false</code> otherwise.</p>
         
 </div>
     
@@ -94,15 +94,15 @@
         <pre class="mb-0">
 <code class="language-cpp rounded py-0 pe-0 ">
 
+import &lt;type_traits&gt;;
+
 import cmoon.meta;
 
 int main()
 {
-    using tl = cmoon::meta::type_list&lt;int, float, char, int&gt;;
-    using tl2 = cmoon::meta::type_list&lt;float, double&gt;;
+    using tl = cmoon::meta::value_list&lt;&gt;;
 
-    static_assert(!tl::is_unique());
-    static_assert(tl2::is_unique());
+    static_assert(tl::empty());
 }
 
 </code>

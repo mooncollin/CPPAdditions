@@ -208,7 +208,7 @@ using value_list&lt;Values...&gt;::transform_to_types&lt;Function&gt; = type_lis
 <code class="language-cpp rounded py-0 pe-0 ">
 
 template&lt;auto... Values&gt;
-template&lt;index_type Offset, index_type Count = -1&gt;
+template&lt;index_type Offset, index_type Count = npos&gt;
 using value_list&lt;Values...&gt;::sub_list&lt;Offset, Count&gt; = /* see below */;
 
 </code>
@@ -225,6 +225,15 @@ using value_list&lt;Values...&gt;::sub_list&lt;Offset, Count&gt; = /* see below 
     <div class="col-3"><code><a href="size.html">size</a></code></div>
     <div class="col">
         Returns the number of values
+        <br>
+        <span class="meta-detail">(public static member function)</span>
+    </div>
+</div>
+<hr>
+<div class="row fw-light">
+    <div class="col-3"><code><a href="empty.html">empty</a></code></div>
+    <div class="col">
+        Returns whether this <code>value_list</code> is empty
         <br>
         <span class="meta-detail">(public static member function)</span>
     </div>

@@ -1,8 +1,8 @@
-export module cmoon.meta.value_list;
+export module cmoon.meta:value_list;
 
 import std.core;
 
-import cmoon.meta.type_list;
+import :type_list;
 
 namespace cmoon::meta
 {
@@ -20,9 +20,16 @@ namespace cmoon::meta
 			template<index_type N>
 			using type = typename types::template type<N>;
 
+			static constexpr index_type npos {std::numeric_limits<index_type>::max()};
+
 			[[nodiscard]] static constexpr index_type size() noexcept
 			{
 				return sizeof...(Values);
+			}
+
+			[[nodiscard]] static constexpr bool empty() noexcept
+			{
+				return size() == 0;
 			}
 		private:
 			template<index_type N, auto Value1, auto... ValueN>
@@ -50,14 +57,7 @@ namespace cmoon::meta
 				if constexpr (std::same_as<std::remove_cvref_t<decltype(Value1)>,
 										   std::remove_cvref_t<T>>)
 				{
-					if (Value1 == item)
-					{
-						return true;
-					}
-					else
-					{
-						return contains_helper<ValueN...>(item);
-					}
+					return Value1 == item || contains_helper<ValueN...>(item);
 				}
 				else
 				{
@@ -66,7 +66,7 @@ namespace cmoon::meta
 			}
 		public:
 			template<index_type N>
-				requires(N < size())
+				requires(N < value_list::size())
 			[[nodiscard]] static constexpr auto get() noexcept
 			{
 				return get_helper<N, Values...>();
@@ -132,19 +132,11 @@ namespace cmoon::meta
 				>
 			> {};
 
-			template<index_type Offset, index_type Count>
-			struct sub_list_helper : std::type_identity<
-				typename value_list<get<Offset>()>::template concatenate<
-					typename sub_list_helper<Offset + 1, Count - 1>::type
-				>
-			> {};
+			template<index_type Offset, class Count>
+			struct sub_list_helper;
 
-			template<index_type Offset, index_type Count>
-				requires(Offset >= size())
-			struct sub_list_helper<Offset, Count> : std::type_identity<value_list<>> {};
-
-			template<index_type Count>
-			struct sub_list_helper<Count, 0> : std::type_identity<value_list<>> {};
+			template<index_type Offset, std::size_t... I>
+			struct sub_list_helper<Offset, std::index_sequence<I...>> : std::type_identity<value_list<get<I + Offset>()...>> {};
 
 			template<template<auto> class Function, auto... Values2>
 			using transform_to_types_helper = type_list<typename Function<Values2>::type...>;
@@ -161,9 +153,9 @@ namespace cmoon::meta
 			template<template<auto> class Function>
 			using transform_to_types = transform_to_types_helper<Function, Values...>;
 
-			template<index_type Offset, index_type Count = -1>
+			template<index_type Offset, index_type Count = npos>
 				requires(Offset < size())
-			using sub_list = typename sub_list_helper<Offset, Count>::type;
+			using sub_list = typename sub_list_helper<Offset, std::make_index_sequence<std::min(size() - Offset, Count)>>::type;
 	};
 
 	export

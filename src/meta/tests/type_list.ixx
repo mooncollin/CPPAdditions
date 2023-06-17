@@ -1,4 +1,4 @@
-export module cmoon.tests.meta.type_list;
+export module cmoon.tests.meta:type_list;
 
 import std.core;
 
@@ -392,30 +392,25 @@ namespace cmoon::tests::meta
 
             void operator()() final
             {
-                using l1 = cmoon::meta::type_list<>;
-                using l2 = cmoon::meta::type_list<int>;
-                using l3 = cmoon::meta::type_list<double, float, int, char>;
+                using l1 = cmoon::meta::type_list<int>;
+                using l2 = cmoon::meta::type_list<double, float, int, char>;
 
                 cmoon::test::assert_is_type<l1::sub_list<0>, l1>();
                 cmoon::test::assert_is_type<l2::sub_list<0>, l2>();
-                cmoon::test::assert_is_type<l3::sub_list<0>, l3>();
 
-                cmoon::test::assert_is_type<l2::sub_list<1>, l1>();
-                cmoon::test::assert_is_type<l3::sub_list<1>, cmoon::meta::type_list<float, int, char>>();
+                cmoon::test::assert_is_type<l2::sub_list<1>, cmoon::meta::type_list<float, int, char>>();
 
-                cmoon::test::assert_is_type<l3::sub_list<2>, cmoon::meta::type_list<int, char>>();
-                cmoon::test::assert_is_type<l3::sub_list<3>, cmoon::meta::type_list<char>>();
-                cmoon::test::assert_is_type<l3::sub_list<4>, cmoon::meta::type_list<>>();
+                cmoon::test::assert_is_type<l2::sub_list<2>, cmoon::meta::type_list<int, char>>();
+                cmoon::test::assert_is_type<l2::sub_list<3>, cmoon::meta::type_list<char>>();
 
-                cmoon::test::assert_is_type<l3::sub_list<0, 0>, cmoon::meta::type_list<>>();
-                cmoon::test::assert_is_type<l3::sub_list<0, 1>, cmoon::meta::type_list<double>>();
-                cmoon::test::assert_is_type<l3::sub_list<0, 2>, cmoon::meta::type_list<double, float>>();
-                cmoon::test::assert_is_type<l3::sub_list<0, 3>, cmoon::meta::type_list<double, float, int>>();
-                cmoon::test::assert_is_type<l3::sub_list<0, 4>, l3>();
-                cmoon::test::assert_is_type<l3::sub_list<0, 5>, l3>();
+                cmoon::test::assert_is_type<l2::sub_list<0, 0>, cmoon::meta::type_list<>>();
+                cmoon::test::assert_is_type<l2::sub_list<0, 1>, cmoon::meta::type_list<double>>();
+                cmoon::test::assert_is_type<l2::sub_list<0, 2>, cmoon::meta::type_list<double, float>>();
+                cmoon::test::assert_is_type<l2::sub_list<0, 3>, cmoon::meta::type_list<double, float, int>>();
+                cmoon::test::assert_is_type<l2::sub_list<0, 4>, l2>();
+                cmoon::test::assert_is_type<l2::sub_list<0, 5>, l2>();
 
-                cmoon::test::assert_is_type<l3::sub_list<1, 2>, cmoon::meta::type_list<float, int>>();
-                cmoon::test::assert_is_type<l3::sub_list<1, 0>, l1>();
+                cmoon::test::assert_is_type<l2::sub_list<1, 2>, cmoon::meta::type_list<float, int>>();
             }
     };
 

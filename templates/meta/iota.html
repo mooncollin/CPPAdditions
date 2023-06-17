@@ -1,0 +1,33 @@
+{% extends "templates/item_page.html" %}
+{% set namespaces = "cmoon::meta" %}
+{% set library_name = "Metaprogramming" %}
+{% set item_name = "iota" %}
+{% block nested %}../{% endblock %}
+{% block content2 %}
+{{macros.defined("cmoon.meta", github_url + "/meta/meta.ixx")}}
+{{macros.overload_set([
+"
+template<auto Start, auto Finish>
+using iota = /* see below */;
+"
+])}}
+<p>
+    Type alias for a <code>value_list</code> containing the sequence <code>[Start, Finish)</code>. If <code>Start</code> &le; <code>Finish</code>, then each number in between is incremented, else decremented.
+</p>
+{{macros.example_code(
+"
+import cmoon.meta;
+
+int main()
+{
+    using tl = cmoon::meta::iota<0, 5>;
+
+    static_assert(std::same_as<tl::get<0>(), 0);
+    static_assert(std::same_as<tl::get<1>(), 1);
+    static_assert(std::same_as<tl::get<2>(), 2);
+    static_assert(std::same_as<tl::get<3>(), 3);
+    static_assert(std::same_as<tl::get<4>(), 4);
+}
+"
+)}}
+{% endblock %}

@@ -225,19 +225,19 @@ using type_list&lt;Types...&gt;::unique = /* see below */;
 <p>
     The <code>unique</code> alias denotes a <code>type_list</code> containing only one of each type from its original <code>type_list</code>.
 </p>
-<h4 id="find_header"><code>find</code></h4>
+<h4><code>find</code></h4>
 <pre class="mb-0">
 <code class="language-cpp rounded py-0 pe-0 ">
 
 template&lt;typename... Types&gt;
-template&lt;template&lt;typename&gt; class Predicate&gt;
-using type_list&lt;Types...&gt;::find&lt;Predicate&gt; = /* see below */;
+template&lt;template&lt;typename&gt; class Predicate, class Default = cmoon::nonesuch&gt;
+using type_list&lt;Types...&gt;::find&lt;Predicate, Default&gt; = /* see below */;
 
 </code>
 </pre>
 <p>
     The <code>find</code> alias denotes a type from this <code>type_list</code> in which <code>Predicate&lt;Types&gt;::value</code> is <code>true</code> first.
-    If there is no type in which <code>Predicate&lt;Types&gt;::value</code> is <code>true</code>, then the program is ill-formed.
+    If there is no type in which <code>Predicate&lt;Types&gt;::value</code> is <code>true</code>, then <code>type_list::find</code> is <code>Default</code>.
 </p>
 <h4><code>complete_type</code></h4>
 <pre class="mb-0">
@@ -245,16 +245,28 @@ using type_list&lt;Types...&gt;::find&lt;Predicate&gt; = /* see below */;
 
 template&lt;typename... Types&gt;
 template&lt;template&lt;typename...&gt; typename T, typename... ExtraArgs&gt;
-using type_list&lt;Types...&gt;::complete_type&lt;T, ExtraArgs...&gt; = T&lt;Types..., ExtraArgs...&gt;;
+using type_list&lt;Types...&gt;::complete_type&lt;T, ExtraArgs...&gt; = T&lt;ExtraArgs..., Types...&gt;;
 
 </code>
 </pre>
+<p>
+    Note: The <code>ExtraArgs...</code> go in front of the <code>type_list</code>'s types.
+</p>
 <h3>Member functions</h3>
 <hr>
 <div class="row fw-light">
     <div class="col-3"><code><a href="size.html">size</a></code></div>
     <div class="col">
         Returns the number of types
+        <br>
+        <span class="meta-detail">(public static member function)</span>
+    </div>
+</div>
+<hr>
+<div class="row fw-light">
+    <div class="col-3"><code><a href="empty.html">empty</a></code></div>
+    <div class="col">
+        Returns whether this <code>type_list</code> is empty
         <br>
         <span class="meta-detail">(public static member function)</span>
     </div>
@@ -327,15 +339,6 @@ using type_list&lt;Types...&gt;::complete_type&lt;T, ExtraArgs...&gt; = T&lt;Typ
     <div class="col-3"><code><a href="for_each.html">for_each</a></code></div>
     <div class="col">
         Calls the given function with each type
-        <br>
-        <span class="meta-detail">(public static member function)</span>
-    </div>
-</div>
-<hr>
-<div class="row fw-light">
-    <div class="col-3"><code><a href="can_find.html">can_find</a></code></div>
-    <div class="col">
-        Checks if it is well-formed to call <code><a href='#find_header'>find</a></code> with the given predicate
         <br>
         <span class="meta-detail">(public static member function)</span>
     </div>
