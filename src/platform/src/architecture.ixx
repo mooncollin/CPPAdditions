@@ -1,4 +1,4 @@
-export module cmoon.platform.architecture;
+export module cmoon.platform:architecture;
 
 namespace cmoon
 {

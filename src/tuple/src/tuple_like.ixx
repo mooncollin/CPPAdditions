@@ -1,4 +1,4 @@
-export module cmoon.tuple.tuple_like;
+export module cmoon.tuple:tuple_like;
 
 import std.core;
 

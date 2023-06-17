@@ -1,4 +1,4 @@
-export module cmoon.type_traits.detector;
+export module cmoon.type_traits:detector;
 
 import std.core;
 

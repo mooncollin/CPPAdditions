@@ -1,4 +1,4 @@
 export module cmoon.tuple;
-export import cmoon.tuple.tuple_like;
-export import cmoon.tuple.for_each;
-export import cmoon.tuple.tuple_transform;
+export import :tuple_like;
+export import :for_each;
+export import :tuple_transform;

@@ -1,4 +1,4 @@
-export module cmoon.scope.scope_exit;
+export module cmoon.scope:scope_exit;
 
 import std.core;
 

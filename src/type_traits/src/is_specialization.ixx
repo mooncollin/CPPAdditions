@@ -1,4 +1,4 @@
-export module cmoon.type_traits.is_specialization;
+export module cmoon.type_traits:is_specialization;
 
 import std.core;
 

@@ -1,12 +1,12 @@
-export module cmoon.html.element;
+export module cmoon.html:element;
 
 import std.core;
 
 import cmoon.type_traits;
 
-import cmoon.html.tag_concept;
-import cmoon.html.no_attributes;
-import cmoon.html.tag_traits;
+import :tag_concept;
+import :no_attributes;
+import :tag_traits;
 
 namespace cmoon::html
 {
@@ -169,14 +169,18 @@ namespace cmoon::html
             constexpr children_base(Children2&&... children) noexcept
                 : children_{std::forward<Children2>(children)...} {}
 
-            [[nodiscard]] constexpr std::tuple<std::unwrap_reference_t<Children>...> children() noexcept
+            [[nodiscard]] constexpr std::tuple<Children&...> children() noexcept
             {
-                return children_;
+                return std::apply([](auto&... children) {
+                    return std::make_tuple(std::ref(children)...);
+                }, children_);
             }
 
-            [[nodiscard]] constexpr std::tuple<std::unwrap_reference_t<Children>...> children() const noexcept
+            [[nodiscard]] constexpr std::tuple<const Children&...> children() const noexcept
             {
-                return children_;
+                return std::apply([](const auto&... children) {
+                    return std::make_tuple(std::cref(children)...);
+                }, children_);
             }
         protected:
             std::tuple<wrap_type_t<Children>...> children_;
@@ -213,14 +217,13 @@ namespace cmoon::html
     {
         public:
             constexpr element() = default;
-
             constexpr element(const element&) = default;
             constexpr element(element&&) noexcept = default;
 
             constexpr element& operator=(const element&) = default;
             constexpr element& operator=(element&&) noexcept = default;
 
-            template<class Tag2, class Attributes2, class... Children2>
+            template<tag_concept Tag2 = Tag, class Attributes2 = Attributes, class... Children2>
             constexpr element(Tag2&& t = {}, Attributes2&& a = {}, Children2&&... children) noexcept
                 : tag_base<Tag>{std::forward<Tag2>(t)},
                   attributes_base<Attributes>{std::forward<Attributes2>(a)},
@@ -245,7 +248,7 @@ namespace cmoon::html
             constexpr element& operator=(const element&) = default;
             constexpr element& operator=(element&&) noexcept = default;
 
-            template<class Tag2>
+            template<class Tag2 = Tag>
                 requires(!std::same_as<std::decay_t<Tag2>, element>)
             constexpr element(Tag2&& t, cmoon::html::no_attributes_t = {}) noexcept
                 : tag_base<Tag>{std::forward<Tag2>(t)} {}
@@ -267,7 +270,7 @@ namespace cmoon::html
     struct indentation_t
     {
         static int xalloc_idx;
-        static int force_xalloc_idx;
+        static int current_xalloc_idx;
 
         int num_spaces;
     };
@@ -280,8 +283,8 @@ namespace cmoon::html
         return os;
     }
 
-    int indentation_t::xalloc_idx       = std::ios_base::xalloc();
-    int indentation_t::force_xalloc_idx = std::ios_base::xalloc();
+    int indentation_t::xalloc_idx         = std::ios_base::xalloc();
+    int indentation_t::current_xalloc_idx = std::ios_base::xalloc();
 
     export
     constexpr indentation_t indentation(int spaces) noexcept
@@ -293,15 +296,29 @@ namespace cmoon::html
     template<class CharT, class Traits>
     std::basic_ostream<CharT, Traits>& no_indentation(std::basic_ostream<CharT, Traits>& os)
     {
-        os.iword(indentation_t::xalloc_idx) = 0;
+        os.iword(indentation_t::xalloc_idx)         = 0;
+        os.iword(indentation_t::current_xalloc_idx) = 0;
         return os;
     }
 
     export
     template<class CharT, class Traits>
-    std::basic_ostream<CharT, Traits>& force_indentation(std::basic_ostream<CharT, Traits>& os)
+    std::basic_ostream<CharT, Traits>& do_indentation(std::basic_ostream<CharT, Traits>& os)
     {
-        os.iword(indentation_t::force_xalloc_idx) = 1;
+        os.iword(indentation_t::current_xalloc_idx) += os.iword(indentation_t::xalloc_idx);
+        return os;
+    }
+
+    export
+    template<class CharT, class Traits>
+    std::basic_ostream<CharT, Traits>& undo_indentation(std::basic_ostream<CharT, Traits>& os)
+    {
+        auto& indentation {os.iword(indentation_t::current_xalloc_idx)};
+        indentation -= os.iword(indentation_t::xalloc_idx);
+        if (indentation < 0)
+        {
+            indentation = 0;
+        }
         return os;
     }
 
@@ -320,26 +337,21 @@ namespace cmoon::html
     }
 
     template<class CharT, class Traits, class T>
-    void print_helper(std::basic_ostream<CharT, Traits>& os, const T& other, bool, const int, const int indentation)
+    void print_helper(std::basic_ostream<CharT, Traits>& os, const T& other)
     {
-        for (int i {0}; i < indentation; ++i)
-        {
-            os << ' ';
-        }
-
         os << other;
     }
 
     template<class CharT, class Traits, class Tag, class Attributes, class... Children>
-    void print_helper(std::basic_ostream<CharT, Traits>& os, const element<Tag, Attributes, Children...>& e, const bool first, [[maybe_unused]] const int indentation_increment, const int indentation)
+    void print_helper(std::basic_ostream<CharT, Traits>& os, const element<Tag, Attributes, Children...>& e)
     {
         using t_traits = tag_traits<Tag>;
-        if (!first)
+
+        auto& indentation {os.iword(indentation_t::current_xalloc_idx)};
+        const auto indentation_increment {os.iword(indentation_t::xalloc_idx)};
+        for (int i {0}; i < indentation; ++i)
         {
-            for (int i {0}; i < indentation; ++i)
-            {
-                os << ' ';
-            }
+            os << ' ';
         }
 
         if constexpr (!t_traits::is_end_tag())
@@ -348,22 +360,35 @@ namespace cmoon::html
             os << e.tag().name();
             if constexpr (!std::same_as<std::decay_t<Attributes>, no_attributes_t>)
             {
-                os << ' ';
-                os << e.attributes();
+                // We want to print a space between the tag name and
+                // attributes. But we only want to when our attributes
+                // actually send info.
+                std::stringstream ss;
+                ss << e.attributes();
+                if (!ss.str().empty())
+                {
+                    os << ' ';
+                    os << std::move(ss).str();
+                }
             }
             os << '>';
             if constexpr (sizeof...(Children) > 0)
             {
-                if (indentation > 0)
-                {
-                    os << '\n';
-                }
-                std::apply([&](const auto&... child) {
-                    (print_helper(os, child, false, indentation_increment, indentation + indentation_increment * !first), ...);
-                }, e.children());
                 if constexpr (std::disjunction_v<cmoon::is_specialization<Children, element>...>)
                 {
-                    if (!first)
+                    if (indentation_increment > 0)
+                    {
+                        os << '\n';
+                    }
+                }
+                indentation += indentation_increment;
+                std::apply([&](const auto&... child) {
+                    (print_helper(os, child), ...);
+                }, e.children());
+                if constexpr (!t_traits::is_start_tag())
+                {
+                    indentation -= indentation_increment;
+                    if constexpr (std::disjunction_v<cmoon::is_specialization<Children, element>...>)
                     {
                         for (int i {0}; i < indentation; ++i)
                         {
@@ -381,10 +406,14 @@ namespace cmoon::html
         }
         if constexpr (!t_traits::is_start_tag())
         {
-            if (indentation > 0)
+            if (indentation_increment > 0)
             {
                 os << '\n';
             }
+        }
+        if constexpr (t_traits::is_end_tag())
+        {
+            indentation -= indentation_increment;
         }
     }
 
@@ -392,10 +421,7 @@ namespace cmoon::html
     template<class Tag, class Attributes, class... Children>
     std::ostream& operator<<(std::ostream& os, const element<Tag, Attributes, Children...>& e)
     {
-        const auto indentation {os.iword(indentation_t::xalloc_idx)};
-        const auto force_indentation {os.iword(indentation_t::force_xalloc_idx)};
-        print_helper(os, e, !force_indentation, indentation, indentation);
-        os.iword(indentation_t::force_xalloc_idx) = 0;
+        print_helper(os, e);
         return os;
     }
 }

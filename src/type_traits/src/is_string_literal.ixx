@@ -1,4 +1,4 @@
-export module cmoon.type_traits.is_string_literal;
+export module cmoon.type_traits:is_string_literal;
 
 import std.core;
 

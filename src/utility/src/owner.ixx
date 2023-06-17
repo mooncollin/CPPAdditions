@@ -1,4 +1,4 @@
-export module cmoon.utility.owner;
+export module cmoon.utility:owner;
 
 import std.core;
 

@@ -1,4 +1,4 @@
-export module cmoon.utility.stopwatch;
+export module cmoon.utility:stopwatch;
 
 import std.core;
 

@@ -1,9 +1,9 @@
 export module cmoon.type_traits;
-export import cmoon.type_traits.copy_traits;
-export import cmoon.type_traits.is_any_of;
-export import cmoon.type_traits.is_unique;
-export import cmoon.type_traits.is_string_literal;
-export import cmoon.type_traits.is_character;
-export import cmoon.type_traits.detector;
-export import cmoon.type_traits.is_specialization;
-export import cmoon.type_traits.function_traits;
+export import :copy_traits;
+export import :is_any_of;
+export import :is_unique;
+export import :is_string_literal;
+export import :is_character;
+export import :detector;
+export import :is_specialization;
+export import :function_traits;

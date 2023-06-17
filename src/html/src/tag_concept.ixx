@@ -1,4 +1,4 @@
-export module cmoon.html.tag_concept;
+export module cmoon.html:tag_concept;
 
 import std.core;
 

@@ -1,4 +1,4 @@
-export module cmoon.scope.unique_resource;
+export module cmoon.scope:unique_resource;
 
 import std.core;
 

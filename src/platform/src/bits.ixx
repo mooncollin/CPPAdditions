@@ -7,7 +7,9 @@ module;
 #include <limits>
 #include <concepts>
 
-export module cmoon.platform.bits;
+export module cmoon.platform:bits;
+
+import std.core;
 
 namespace cmoon
 {

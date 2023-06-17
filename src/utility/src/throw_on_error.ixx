@@ -1,4 +1,4 @@
-export module cmoon.utility.throw_on_error;
+export module cmoon.utility:throw_on_error;
 
 import std.core;
 

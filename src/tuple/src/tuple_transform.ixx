@@ -1,8 +1,8 @@
-export module cmoon.tuple.tuple_transform;
+export module cmoon.tuple:tuple_transform;
 
 import std.core;
 
-import cmoon.tuple.tuple_like;
+import :tuple_like;
 
 namespace cmoon
 {

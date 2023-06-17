@@ -2,21 +2,20 @@ CONFIG ?= debug
 VPATH += src
 
 ifeq ($(OS),Windows_NT)
-	CXX =cl.exe /ifcSearchDir"$(build_directory)"
+	CXX =cl.exe
 	CXX_LIB =lib.exe /OUT:"$(basename $@).lib"
 	make-dir =if not exist "$(1)" mkdir "$(1)"
 	del-file =del /q $(1)
 	copy-file=copy $(1) $(2)
 	make-path =$(subst /,\,$(subst %,\,$(strip $1)))
 	object_file_extension =obj
-	module_file_extension =ifc
+	library_file_extension=lib
 
-	CXXMODULE		=-c /ifcOutput"$(build_directory)" 
+	CXXMODULE		=-c /ifcOutput"$(build_directory)" /Fo"$(basename $@).$(object_file_extension)"
 	CXXMODULEONLY	=/ifcOnly
-	CXXIMPL			=-c /Fo"$(basename $@).$(object_file_extension)"
 	CXXEXECUTABLE	=/Fe"$(basename $@).exe" /Fo"$(basename $@).$(object_file_extension)" "$(build_directory)\*.lib"
 
-	CXXFLAGS += /nologo /EHa /std:c++latest /experimental:module /W4
+	CXXFLAGS += /nologo /EHa /std:c++latest /experimental:module /W4 /ifcSearchDir"$(build_directory)"
 
 	ifeq ($(CONFIG),debug)
 		CXXFLAGS += /Z7 /MDd
@@ -24,11 +23,6 @@ ifeq ($(OS),Windows_NT)
 	else ifeq ($(CONFIG),release)
 		CXXFLAGS += /O2 /MD
 	endif
-
-	add-build-module     	=$(call add-build-target,$(1).$(module_file_extension),$(2),$(3))
-	add-build-impl			=$(call add-build-target,$(1).$(object_file_extension),$(2),$(addsuffix .$(module_file_extension),$(3)))
-	add-build-module-impl 	=$(call add-build-target,$(1).$(object_file_extension) $(1).$(module_file_extension),$(2),$(addprefix $(build_directory)/,$(addsuffix .$(module_file_extension),$(3))))
-	add-build-library   	=$(call add-build-target,$(1).lib,$(addprefix $(build_directory)/,$(addsuffix .$(object_file_extension),$(2))),$(addprefix $(build_directory)/,$(addsuffix .lib,$(3))))
 endif
 
 level=
@@ -49,6 +43,8 @@ build-file 	 =$(call make-path,$(call get-build-directory)%$(1))
 
 add-build-target =$(addprefix $(build_directory)/,$(1)): $(2) $(3) | $(build_directory)
 add-bin-target   =$(addprefix $(bin_directory)/,$(1)): $(2) $(addprefix $(build_directory)/,$(addsuffix .lib,$(3))) | $(bin_directory)
+add-build-module =$(call add-build-target,$(1).$(object_file_extension),$(2),$(addprefix $(build_directory)/,$(addsuffix .$(object_file_extension),$(3))))
+add-build-library=$(call add-build-target,$(1).$(library_file_extension),$(addprefix $(build_directory)/,$(addsuffix .$(object_file_extension),$(2))),$(addprefix $(build_directory)/,$(addsuffix .$(library_file_extension),$(3))))
 
 define build-library
 	$(CXX_LIB) \

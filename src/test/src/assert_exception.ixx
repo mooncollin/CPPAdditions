@@ -1,4 +1,4 @@
-export module cmoon.test.assert_exception;
+export module cmoon.test:assert_exception;
 
 import std.core;
 

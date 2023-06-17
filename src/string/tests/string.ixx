@@ -1,5 +1,5 @@
 export module cmoon.tests.string;
-export import cmoon.tests.string.algorithm;
+export import :algorithm;
 
 import std.core;
 

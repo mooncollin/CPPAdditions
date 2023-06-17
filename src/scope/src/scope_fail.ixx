@@ -1,4 +1,4 @@
-export module cmoon.scope.scope_fail;
+export module cmoon.scope:scope_fail;
 
 import std.core;
 

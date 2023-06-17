@@ -1,4 +1,4 @@
-export module cmoon.tests.string.algorithm;
+export module cmoon.tests.string:algorithm;
 
 import std.core;
 

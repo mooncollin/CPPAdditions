@@ -1,4 +1,4 @@
-export module cmoon.tuple.for_each;
+export module cmoon.tuple:for_each;
 
 import std.core;
 

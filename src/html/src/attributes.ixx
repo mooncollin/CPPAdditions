@@ -1,4 +1,4 @@
-export module cmoon.html.attributes;
+export module cmoon.html:attributes;
 
 import std.core;
 
@@ -91,39 +91,6 @@ namespace cmoon::html
     };
 
     export
-    class custom_attribute : public base_attribute<custom_attribute, std::string, void>
-    {
-        public:
-            constexpr custom_attribute(std::string name, std::string value)
-                : base_attribute<custom_attribute, std::string, void>{value},
-                  name_{name} {}
-
-            [[nodiscard]] constexpr const std::string& name() const noexcept
-            {
-                return name_;
-            }
-
-            class constant : public base_attribute<constant, std::string_view, void>
-            {
-                public:
-                    using parent_type = custom_attribute;
-
-                    constexpr constant(std::string_view name, std::string_view value) noexcept
-                        : base_attribute<constant, std::string_view, void>{value},
-                          name_{name} {}
-
-                    [[nodiscard]] constexpr std::string_view name() const noexcept
-                    {
-                        return name_;
-                    }
-                private:
-                    std::string_view name_;
-            };
-        private:
-            std::string name_;
-    };
-
-    export
     namespace attributes
     {
         export
@@ -150,6 +117,15 @@ namespace cmoon::html
             [[nodiscard]] static constexpr std::string_view name() noexcept
             {
                 return "aria-controls";
+            }
+        };
+
+        export
+        struct aria_current : public base_attribute<aria_current, std::string, std::string_view>
+        {
+            [[nodiscard]] static constexpr std::string_view name() noexcept
+            {
+                return "aria-current";
             }
         };
 
@@ -312,6 +288,15 @@ namespace cmoon::html
             [[nodiscard]] static constexpr std::string_view name() noexcept
             {
                 return "required";
+            }
+        };
+
+        export
+        struct style : public base_attribute<style, std::string, std::string_view>
+        {
+            [[nodiscard]] static constexpr std::string_view name() noexcept
+            {
+                return "style";
             }
         };
 

@@ -1,4 +1,4 @@
-export module cmoon.type_traits.is_any_of;
+export module cmoon.type_traits:is_any_of;
 
 import std.core;
 

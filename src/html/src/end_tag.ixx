@@ -1,4 +1,4 @@
-export module cmoon.html.end_tag;
+export module cmoon.html:end_tag;
 
 namespace cmoon::html
 {

@@ -1,4 +1,4 @@
-export module cmoon.type_traits.function_traits;
+export module cmoon.type_traits:function_traits;
 
 import std.core;
 

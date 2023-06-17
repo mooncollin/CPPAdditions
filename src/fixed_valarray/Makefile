@@ -6,21 +6,21 @@ $(call add-build-library,cmoon.fixed_valarray,cmoon.fixed_valarray.underlying \
 										 	   cmoon.fixed_valarray)
 	$(call build-library)
 
-$(call add-build-module-impl,cmoon.fixed_valarray,fixed_valarray.ixx, \
+$(call add-build-module,cmoon.fixed_valarray,fixed_valarray.ixx, \
 							 					  cmoon.fixed_valarray.expressions \
 							 					  cmoon.fixed_valarray.underlying)
-	$(CXX) $(CXXFLAGS) $(CXXMODULE) $(CXXIMPL) \
+	$(CXX) $(CXXFLAGS) $(CXXMODULE) \
 		$(call src-file,fixed_valarray.ixx)
 
-$(call add-build-module-impl,cmoon.fixed_valarray.expressions,expressions.ixx, \
+$(call add-build-module,cmoon.fixed_valarray.expressions,expressions.ixx, \
 														 	  cmoon.type_traits \
 														 	  cmoon.meta)
-	$(CXX) $(CXXFLAGS) $(CXXMODULE) $(CXXIMPL) \
+	$(CXX) $(CXXFLAGS) $(CXXMODULE) \
 		$(call src-file,expressions.ixx)
 
-$(call add-build-module-impl,cmoon.fixed_valarray.underlying,underlying.ixx, \
+$(call add-build-module,cmoon.fixed_valarray.underlying,underlying.ixx, \
 															 cmoon.simd)
-	$(CXX) $(CXXFLAGS) $(CXXMODULE) $(CXXIMPL) \
+	$(CXX) $(CXXFLAGS) $(CXXMODULE) \
 		$(call src-file,underlying.ixx)
 
 #-------------------------------
@@ -40,10 +40,10 @@ main: $(bin_directory)/main.exe
 $(call add-build-library,cmoon.tests.fixed_valarray,cmoon.tests.fixed_valarray)
 	$(call build-library)
 
-$(call add-build-module-impl,cmoon.tests.fixed_valarray,$(tests_directory)/fixed_valarray.ixx, \
+$(call add-build-module,cmoon.tests.fixed_valarray,$(tests_directory)/fixed_valarray.ixx, \
 														cmoon.fixed_valarray \
 											  			cmoon.test)
-	$(CXX) $(CXXFLAGS) $(CXXMODULE) $(CXXIMPL) \
+	$(CXX) $(CXXFLAGS) $(CXXMODULE) \
 		$(call test-file,fixed_valarray.ixx)
 
 $(call add-bin-target,tests.exe,$(tests_directory)/main.cpp, \

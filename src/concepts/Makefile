@@ -4,9 +4,9 @@ include $(CURDIR)/$(level)/Makefile_template_begin
 $(call add-build-library,cmoon.concepts,cmoon.concepts)
 	$(call build-library)
 
-$(call add-build-module-impl,cmoon.concepts,concepts.ixx, \
-											cmoon.type_traits)
-	$(CXX) $(CXXFLAGS) $(CXXMODULE) $(CXXIMPL) \
+$(call add-build-module,cmoon.concepts,concepts.ixx, \
+									   cmoon.type_traits)
+	$(CXX) $(CXXFLAGS) $(CXXMODULE) \
 		$(call src-file,concepts.ixx)
 
 # TESTS-------------------------------------------------------------------------------
@@ -14,11 +14,11 @@ $(call add-build-module-impl,cmoon.concepts,concepts.ixx, \
 $(call add-build-library,cmoon.tests.concepts,cmoon.tests.concepts)
 	$(call build-library)
 
-$(call add-build-module-impl,cmoon.tests.concepts,$(tests_directory)/concepts.ixx, \
-											 	  cmoon.concepts \
-												  cmoon.type_traits \
-												  cmoon.test)
-	$(CXX) $(CXXFLAGS) $(CXXMODULE) $(CXXIMPL) \
+$(call add-build-module,cmoon.tests.concepts,$(tests_directory)/concepts.ixx, \
+											 cmoon.concepts \
+											 cmoon.type_traits \
+											 cmoon.test)
+	$(CXX) $(CXXFLAGS) $(CXXMODULE) \
 		$(call test-file,concepts.ixx)
 
 $(call add-bin-target,tests.exe,$(tests_directory)/main.cpp, \
@@ -31,8 +31,5 @@ $(call add-bin-target,tests.exe,$(tests_directory)/main.cpp, \
 								cmoon.scope)
 	$(CXX) $(CXXFLAGS) $(CXXEXECUTABLE) \
 		$(call test-file,main.cpp)
-
-tests: $(bin_directory)/tests.exe
-	@$(bin_directory)/tests.exe
 
 include $(CURDIR)/$(level)/Makefile_template_end

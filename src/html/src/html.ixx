@@ -1,8 +1,9 @@
 export module cmoon.html;
-export import cmoon.html.tag_concept;
-export import cmoon.html.no_attributes;
-export import cmoon.html.static_attributes;
-export import cmoon.html.make_attributes;
-export import cmoon.html.attributes;
-export import cmoon.html.element;
-export import cmoon.html.tags;
+export import :tag_concept;
+export import :no_attributes;
+export import :static_attributes;
+export import :make_attributes;
+export import :attributes;
+export import :element;
+export import :tags;
+export import :dynamic_element;

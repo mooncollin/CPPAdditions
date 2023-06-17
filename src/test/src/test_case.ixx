@@ -1,9 +1,9 @@
-export module cmoon.test.test_case;
+export module cmoon.test:test_case;
 
 import std.core;
 
-import cmoon.test.assert_exception;
-import cmoon.test.test_result;
+import :assert_exception;
+import :test_result;
 
 namespace cmoon::test
 {

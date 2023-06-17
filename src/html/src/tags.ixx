@@ -1,63 +1,14 @@
-export module cmoon.html.tags;
+export module cmoon.html:tags;
 
 import std.core;
 
-import cmoon.html.no_attributes;
-import cmoon.html.element;
-import cmoon.html.start_tag;
-import cmoon.html.end_tag;
+import :no_attributes;
+import :element;
+import :start_tag;
+import :end_tag;
 
 namespace cmoon::html
 {
-    export
-    class custom_tag
-    {
-        public:
-            constexpr custom_tag(std::string name_, const bool self_closing_ = false) noexcept
-                : name_{std::move(name_)}, self_closing_{self_closing_} {}
-
-            [[nodiscard]] constexpr bool is_self_closing() const noexcept
-            {
-                return self_closing_;
-            }
-
-            [[nodiscard]] constexpr bool& is_self_closing() noexcept
-            {
-                return self_closing_;
-            }
-
-            [[nodiscard]] constexpr std::string& name() noexcept
-            {
-                return name_;
-            }
-
-            [[nodiscard]] constexpr const std::string& name() const noexcept
-            {
-                return name_;
-            }
-
-            template<class Attributes = no_attributes_t, class... Children>
-            constexpr auto operator()(Attributes&& attributes = {}, Children&&... children) &
-            {
-                return element{std::ref(*this), std::forward<Attributes>(attributes), std::forward<Children>(children)...};
-            }
-
-            template<class Attributes = no_attributes_t, class... Children>
-            constexpr auto operator()(Attributes&& attributes = {}, Children&&... children) const&
-            {
-                return element{std::cref(*this), std::forward<Attributes>(attributes), std::forward<Children>(children)...};
-            }
-
-            template<class Attributes = no_attributes_t, class... Children>
-            constexpr auto operator()(Attributes&& attributes = {}, Children&&... children) &&
-            {
-                return element{std::move(*this), std::forward<Attributes>(attributes), std::forward<Children>(children)...};
-            }
-        private:
-            std::string name_;
-            bool self_closing_;
-    };
-
     export
     template<class T>
     struct base_tag
@@ -240,6 +191,22 @@ namespace cmoon::html
     export
     constexpr input_tag_t input_tag {};
 
+    struct li_tag_t : base_tag<li_tag_t>
+    {
+        [[nodiscard]] static constexpr std::string_view name() noexcept
+        {
+            return "li";
+        }
+
+        [[nodiscard]] static constexpr bool is_self_closing() noexcept
+        {
+            return false;
+        }
+    };
+
+    export
+    constexpr li_tag_t li_tag {};
+
     struct link_tag_t : base_tag<link_tag_t>
     {
         [[nodiscard]] static constexpr std::string_view name() noexcept
@@ -287,6 +254,22 @@ namespace cmoon::html
 
     export
     constexpr nav_tag_t nav_tag {};
+
+    struct ol_tag_t : base_tag<ol_tag_t>
+    {
+        [[nodiscard]] static constexpr std::string_view name() noexcept
+        {
+            return "ol";
+        }
+
+        [[nodiscard]] static constexpr bool is_self_closing() noexcept
+        {
+            return false;
+        }
+    };
+
+    export
+    constexpr ol_tag_t ol_tag {};
 
     struct path_tag_t : base_tag<path_tag_t>
     {

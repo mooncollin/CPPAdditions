@@ -1,4 +1,4 @@
-export module cmoon.utility.extent_type;
+export module cmoon.utility:extent_type;
 
 import std.core;
 

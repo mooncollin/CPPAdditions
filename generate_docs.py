@@ -48,7 +48,7 @@ if __name__ == '__main__':
         for path in DOCS_FOLDER.iterdir():
             if path.is_file():
                 path.unlink()
-            else:
+            elif path.name != 'src':
                 shutil.rmtree(path)
 
     generate_templates(TEMPLATES_FOLDER, {

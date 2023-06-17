@@ -1,10 +1,10 @@
-export module cmoon.test.assert;
+export module cmoon.test:assert;
 
 import std.core;
 
 import cmoon.concepts;
 
-import cmoon.test.assert_exception;
+import :assert_exception;
 
 namespace cmoon::test
 {
@@ -202,8 +202,7 @@ namespace cmoon::test
 	{
 		try
 		{
-			std::forward<F>(callable)(std::forward<Args>(args)...);
-			return;
+			std::invoke(std::forward<F>(callable), std::forward<Args>(args)...);
 		}
 		catch (std::decay_t<T>&)
 		{
@@ -223,40 +222,24 @@ namespace cmoon::test
 	}
 
 	export
-	template<class T, class F>
-		requires(std::is_arithmetic_v<T> && std::is_arithmetic_v<F>)
+	template<std::floating_point T, std::floating_point F>
 	void assert_almost_equal(const T& actual, const F& expected, const std::common_type_t<T, F>& delta, std::string_view message = "", const std::source_location& location = std::source_location::current())
 	{
 		const auto difference {std::abs(actual - expected)};
 		if (difference > delta)
 		{
-			if constexpr (cmoon::formattable<decltype(difference)>)
-			{
-				throw assert_exception{std::format("assert_almost_equal failed at line {} ({}): {}\n{}Difference: {}\n", location.line(), location.file_name(), message, output_if_possible(actual, expected), difference)};
-			}
-			else
-			{
-				throw assert_exception{std::format("assert_almost_equal failed at line {} ({}): {}\n{}", location.line(), location.file_name(), message, output_if_possible(actual, expected))};
-			}
+			throw assert_exception{std::format("assert_almost_equal failed at line {} ({}): {}\n{}Difference: {}\n", location.line(), location.file_name(), message, output_if_possible(actual, expected), difference)};
 		}
 	}
 
 	export
-	template<class T, class F>
-		requires(std::is_arithmetic_v<T> && std::is_arithmetic_v<F>)
+	template<std::floating_point T, std::floating_point F>
 	void assert_not_almost_equal(const T& actual, const F& expected, const std::common_type_t<T, F>& delta, std::string_view message = "", const std::source_location& location = std::source_location::current())
 	{
-		const auto difference = std::abs(actual - expected);
+		const auto difference {std::abs(actual - expected)};
 		if (difference <= delta)
 		{
-			if constexpr (cmoon::formattable<decltype(difference)>)
-			{
-				throw assert_exception{std::format("assert_not_almost_equal failed at line {} ({}): {}\n{}Difference: {}\n", location.line(), location.file_name(), message, output_if_possible(actual, expected), difference)};
-			}
-			else
-			{
-				throw assert_exception{std::format("assert_not_almost_equal failed at line {} ({}): {}\n{}", location.line(), location.file_name(), message, output_if_possible(actual, expected))};
-			}
+			throw assert_exception{std::format("assert_not_almost_equal failed at line {} ({}): {}\n{}Difference: {}\n", location.line(), location.file_name(), message, output_if_possible(actual, expected), difference)};
 		}
 	}
 

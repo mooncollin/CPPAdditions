@@ -1,4 +1,4 @@
-export module cmoon.platform.compiler;
+export module cmoon.platform:compiler;
 
 namespace cmoon
 {

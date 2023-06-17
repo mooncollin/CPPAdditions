@@ -1,8 +1,8 @@
-export module cmoon.ranges.adjacent;
+export module cmoon.ranges:adjacent;
 
 import std.core;
 
-import cmoon.ranges.zip;
+import :zip;
 
 namespace cmoon::ranges
 {

@@ -1,4 +1,4 @@
-export module cmoon.html.start_tag;
+export module cmoon.html:start_tag;
 
 namespace cmoon::html
 {

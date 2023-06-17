@@ -1,4 +1,4 @@
-export module cmoon.html.static_attributes;
+export module cmoon.html:static_attributes;
 
 import std.core;
 
@@ -72,6 +72,21 @@ namespace cmoon::html
                     using parent_types = types::template transform<to_parent>;
                     return std::get<parent_types::template index<T>()>(attributes_.values());
                 }
+            }
+
+            [[nodiscard]] constexpr decltype(auto) values() & noexcept
+            {
+                return attributes_.values();
+            }
+
+            [[nodiscard]] constexpr decltype(auto) values() && noexcept
+            {
+                return std::move(attributes_).values();
+            }
+
+            [[nodiscard]] constexpr decltype(auto) values() const& noexcept
+            {
+                return attributes_.values();
             }
 
             friend std::ostream& operator<<(std::ostream& os, const static_attributes& a)

@@ -14,7 +14,7 @@ $(call add-build-library,cmoon.core,cmoon.core, \
 									cmoon.html)
 	$(call build-library)
 
-$(call add-build-module-impl,cmoon.core,core.ixx, \
+$(call add-build-module,cmoon.core,core.ixx, \
 											cmoon.platform \
 											cmoon.type_traits \
 											cmoon.concepts \
@@ -26,7 +26,7 @@ $(call add-build-module-impl,cmoon.core,core.ixx, \
 											cmoon.test \
 											cmoon.named_tuple \
 											cmoon.html)
-	$(CXX) $(CXXFLAGS) $(CXXMODULE) $(CXXIMPL) \
+	$(CXX) $(CXXFLAGS) $(CXXMODULE) \
 		$(call src-file,core.ixx)
 
 include Makefile_template_end

@@ -1,8 +1,8 @@
-export module cmoon.ranges.enumerate;
+export module cmoon.ranges:enumerate;
 
 import std.core;
 
-import cmoon.ranges.zip;
+import :zip;
 
 namespace cmoon::ranges
 {

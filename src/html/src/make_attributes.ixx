@@ -1,9 +1,9 @@
-export module cmoon.html.make_attributes;
+export module cmoon.html:make_attributes;
 
 import std.core;
 
-import cmoon.html.no_attributes;
-import cmoon.html.static_attributes;
+import :no_attributes;
+import :static_attributes;
 
 namespace cmoon::html
 {

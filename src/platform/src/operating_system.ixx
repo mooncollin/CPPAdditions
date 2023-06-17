@@ -1,4 +1,4 @@
-export module cmoon.platform.operating_system;
+export module cmoon.platform:operating_system;
 
 namespace cmoon
 {

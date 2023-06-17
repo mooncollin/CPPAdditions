@@ -5,11 +5,11 @@ clean_build_target =*
 else
 generic_level=../
 level_indirection=
-clean_build_target =cmoon.$(notdir $(CURDIR)).*
+clean_build_target =cmoon.$(notdir $(CURDIR))*
 endif
 
-$(build_directory)/cmoon.%.$(module_file_extension):
-	@$(MAKE) -C $(generic_level)$* $(level_indirection)$(build_directory)/cmoon.$*.$(module_file_extension)
+$(build_directory)/cmoon.%.$(object_file_extension):
+	@$(MAKE) -C $(generic_level)$* $(level_indirection)$(build_directory)/cmoon.$*.$(object_file_extension)
 
 $(build_directory)/cmoon.%.lib:
 	@$(MAKE) -C $(generic_level)$* $(level_indirection)$(build_directory)/cmoon.$*.lib
@@ -24,10 +24,13 @@ endif
 
 $(build_directory):
 	@$(call make-dir,$(call make-path,$(build_directory)))
-
+	
 $(bin_directory):
 	@$(call make-dir,$(call make-path,$(bin_directory)))
 
 clean: | $(build_directory) $(bin_directory)
 	$(call del-file,$(call make-path,$(build_directory)%$(clean_build_target)))
 	$(call del-file,$(call make-path,$(bin_directory)%*))
+
+tests: $(bin_directory)/tests.exe
+	@$(bin_directory)/tests.exe

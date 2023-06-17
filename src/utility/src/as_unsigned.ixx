@@ -1,4 +1,4 @@
-export module cmoon.utility.as_unsigned;
+export module cmoon.utility:as_unsigned;
 
 import std.core;
 

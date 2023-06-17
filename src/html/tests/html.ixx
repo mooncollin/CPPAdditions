@@ -1,7 +1,7 @@
 export module cmoon.tests.html;
-export import cmoon.tests.html.attributes;
-export import cmoon.tests.html.static_attributes;
-export import cmoon.tests.html.element;
+export import :attributes;
+export import :static_attributes;
+export import :element;
 
 import std.core;
 

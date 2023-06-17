@@ -97,7 +97,7 @@ namespace cmoon
     export
     template<typename T, std::size_t S>
         requires(requires {
-            typename choose_simd_type<T, S>;
+            typename choose_simd_type<T, S>::type;
         })
     struct underlying_valarray<T, S>
     {
@@ -122,7 +122,7 @@ namespace cmoon
                     }
                     else
                     {
-                        return std::get<I>(std::move(tup));
+                        return std::get<I2>(std::move(tup));
                     }
                 };
 

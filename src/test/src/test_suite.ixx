@@ -1,8 +1,8 @@
-export module cmoon.test.test_suite;
+export module cmoon.test:test_suite;
 
 import std.core;
 
-import cmoon.test.test_case;
+import :test_case;
 
 namespace cmoon::test
 {
@@ -73,6 +73,14 @@ namespace cmoon::test
 			void add_test_case(Args&&... args)
 			{
 				cases.push_back(std::make_unique<T>(std::forward<Args>(args)...));
+			}
+
+			template<template<class...> class T, class... Args>
+			void add_test_case(Args&&... args)
+			{
+				using type = decltype(T{std::declval<Args>()...});
+				static_assert(std::derived_from<type, test_case>);
+				cases.push_back(std::make_unique<type>(std::forward<Args>(args)...));
 			}
 
 			const std::string& name() const noexcept

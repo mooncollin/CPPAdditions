@@ -1,4 +1,4 @@
-export module cmoon.utility.decay_copy;
+export module cmoon.utility:decay_copy;
 
 import std.core;
 

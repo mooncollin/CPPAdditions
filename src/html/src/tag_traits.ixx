@@ -1,9 +1,9 @@
-export module cmoon.html.tag_traits;
+export module cmoon.html:tag_traits;
 
 import std.core;
 
-import cmoon.html.start_tag;
-import cmoon.html.end_tag;
+import :start_tag;
+import :end_tag;
 
 namespace cmoon::html
 {

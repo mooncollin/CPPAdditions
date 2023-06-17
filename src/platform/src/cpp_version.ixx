@@ -1,4 +1,4 @@
-export module cmoon.platform.cpp_version;
+export module cmoon.platform:cpp_version;
 
 import std.core;
 

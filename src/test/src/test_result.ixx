@@ -1,8 +1,8 @@
-export module cmoon.test.test_result;
+export module cmoon.test:test_result;
 
 import std.core;
 
-import cmoon.test.assert_exception;
+import :assert_exception;
 
 namespace cmoon::test
 {

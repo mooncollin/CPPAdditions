@@ -1,4 +1,4 @@
-export module cmoon.ranges.to;
+export module cmoon.ranges:to;
 
 import std.core;
 

@@ -1,4 +1,4 @@
-export module cmoon.tests.html.attributes;
+export module cmoon.tests.html:attributes;
 
 import std.core;
 

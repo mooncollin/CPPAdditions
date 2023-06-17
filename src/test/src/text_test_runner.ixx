@@ -1,13 +1,13 @@
-export module cmoon.test.text_test_runner;
+export module cmoon.test:text_test_runner;
 
 import std.core;
 
 import cmoon.utility;
 import cmoon.scope;
 
-import cmoon.test.test_case;
-import cmoon.test.test_suite;
-import cmoon.test.test_result;
+import :test_case;
+import :test_suite;
+import :test_result;
 
 namespace cmoon::test
 {

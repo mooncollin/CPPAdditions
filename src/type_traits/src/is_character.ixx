@@ -1,4 +1,4 @@
-export module cmoon.type_traits.is_character;
+export module cmoon.type_traits:is_character;
 
 import std.core;
 

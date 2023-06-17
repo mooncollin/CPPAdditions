@@ -1,4 +1,4 @@
-export module cmoon.utility.copyable_box;
+export module cmoon.utility:copyable_box;
 
 import std.core;
 
